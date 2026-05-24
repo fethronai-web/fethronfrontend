@@ -10,6 +10,7 @@ import {
   useTransform,
 } from "motion/react";
 import { useReady } from "@/components/layout/ready-context";
+import { BrandMark } from "@/components/ui/brand-mark";
 
 const PAGE_BACKGROUND = "/images/background.webp";
 const CARD_BACKGROUND = "/images/herobackground.webp";
@@ -154,17 +155,6 @@ export function Preloader() {
             <div className="absolute inset-0 bg-black/30" />
           </div>
 
-          {/* Brand watermark — sits behind the scene (hands/ball/panel occlude it),
-              faint red that melts into the clouds, lower half cut by the card edge */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center"
-            aria-hidden="true"
-          >
-            <span className="font-brand translate-y-[22%] select-none whitespace-nowrap text-[clamp(3.5rem,17vw,15rem)] font-bold uppercase leading-none tracking-[0.05em] text-accent/15">
-              Fethron
-            </span>
-          </div>
-
           {/* Left arm — outer div positions, inner div eases in with progress */}
           <div className="pointer-events-none absolute left-[-13.7%] top-[40%] w-[64%] -translate-y-1/2">
             <motion.div style={{ x: leftX, willChange: "transform" }}>
@@ -242,6 +232,16 @@ export function Preloader() {
                 {pct}%
               </p>
             </div>
+          </div>
+
+          {/* Brand logo — top left */}
+          <div className="absolute left-6 top-6 flex items-center gap-3 lg:left-8 lg:top-8">
+            <span className="h-10 w-10 shrink-0 sm:h-12 sm:w-12">
+              <BrandMark variant="red" />
+            </span>
+            <span className="font-brand text-xl font-semibold uppercase tracking-[0.24em] text-off-white sm:text-2xl">
+              Fethron
+            </span>
           </div>
 
           {/* Corner taglines */}
