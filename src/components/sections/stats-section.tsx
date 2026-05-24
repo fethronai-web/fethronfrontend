@@ -4,12 +4,12 @@ import { Reveal } from "@/components/ui/reveal";
 
 export function StatsSection() {
   return (
-    <section id="about" className="relative border-t border-border bg-black py-20 sm:py-28">
+    <section id="impact" className="relative border-t border-border bg-black py-20 sm:py-28">
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:items-end lg:gap-20">
           <Reveal>
             <div>
-              <p className="ui-label text-accent">About Fethron</p>
+              <p className="ui-label text-accent">By the Numbers</p>
               <h2 className="font-display mt-4 text-balance text-[clamp(2rem,4.5vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em] text-foreground">
                 A boutique agency with enterprise discipline
               </h2>
