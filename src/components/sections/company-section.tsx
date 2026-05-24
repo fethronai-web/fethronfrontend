@@ -22,6 +22,9 @@ export function CompanySection() {
         />
         <div className="absolute inset-0 bg-black/25" />
         <div className="absolute inset-0 bg-linear-to-r from-transparent via-black/20 to-black/55" />
+        {/* fade the bottom to pure black so it blends seamlessly into the
+            Services section below — no hard seam between the two backdrops */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-b from-transparent to-black" />
       </div>
 
       <Container>

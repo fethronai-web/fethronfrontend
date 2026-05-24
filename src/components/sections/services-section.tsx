@@ -316,7 +316,7 @@ export function ServicesSection() {
     return (
       <section
         id="services"
-        className="relative isolate overflow-hidden border-t border-white/10 bg-black py-24 sm:py-32"
+        className="relative isolate overflow-hidden bg-black py-24 sm:py-32"
       >
         <Image
           src={BACKGROUND}
@@ -356,7 +356,7 @@ export function ServicesSection() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative border-t border-white/10 bg-black"
+      className="relative bg-black"
       style={{ height: `${SERVICES.length * 70}vh` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
@@ -371,6 +371,11 @@ export function ServicesSection() {
         {/* gentle left wash so the heading stays legible over the art */}
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/55 via-black/10 to-transparent"
+          aria-hidden="true"
+        />
+        {/* fade the top edge to black so it meets the Studio section seamlessly */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black to-transparent"
           aria-hidden="true"
         />
 

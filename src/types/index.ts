@@ -29,9 +29,14 @@ export interface Project {
   title: string;
   category: string;
   description: string;
-  metrics: string;
-  gradient: string;
-  layout: "hero" | "wide" | "default";
+  image: string;
+  url?: string;
+  tagline: string;
+  industry: string;
+  services: string;
+  duration: string;
+  role: string;
+  quote: string;
   year: string;
 }
 
