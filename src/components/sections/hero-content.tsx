@@ -157,18 +157,19 @@ export function HeroContent() {
 
           <motion.p
             {...rise(0.56)}
-            className="mt-6 text-lg font-medium text-off-white sm:text-xl"
+            className="mt-6 text-xl font-medium text-off-white sm:text-2xl"
           >
-            Crafting websites and Automation AI systems for{" "}
+            Crafting websites, AI automation, and Web3 systems for{" "}
             <span className="text-accent">ambitious</span> brands.
           </motion.p>
 
           <motion.p
             {...rise(0.66)}
-            className="mt-4 max-w-md text-sm leading-relaxed text-swirl/60"
+            className="mt-4 max-w-xl text-balance text-base leading-relaxed text-swirl/65 sm:text-lg"
           >
-            We design and build premium websites and AI automation that elevate
-            your brand, engage your audience, and perform for years to come.
+            From brand design and WhatsApp automation to AI agents, crypto
+            exchanges, DeFi platforms, web, iOS &amp; Android apps, and SEO &amp;
+            GEO — we craft, build, and ship it all, end to end.
           </motion.p>
         </div>
 

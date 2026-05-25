@@ -2,7 +2,6 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "motion/react";
 import { PROJECTS } from "@/config/site";
 
@@ -100,15 +99,12 @@ function CaseList({
 }) {
   return (
     <div className="flex flex-col">
-      {/* brand */}
+      {/* heading */}
       <div className="flex flex-col items-start">
-        <ColumnLogo className="h-12 w-10 text-gold/75" />
-        <span className="font-brand mt-4 text-xl font-semibold uppercase tracking-[0.3em] text-off-white">
-          Fethron
-        </span>
-        <span className="mt-1.5 text-[10px] uppercase tracking-[0.35em] text-swirl/45">
-          Digital Agency
-        </span>
+        <ColumnLogo className="h-28 w-24 text-gold/75" />
+        <h2 className="font-display mt-4 text-[clamp(2.25rem,4vw,3.5rem)] font-normal leading-[0.95] tracking-[-0.01em] text-off-white">
+          Our Work
+        </h2>
       </div>
 
       <p className="ui-label mt-10 text-off-white/40">Case Study Archive</p>
@@ -167,14 +163,6 @@ function CaseList({
           );
         })}
       </ul>
-
-      <Link
-        href="#contact"
-        className="ui-label group mt-9 inline-flex items-center gap-3 text-off-white/55 transition-colors hover:text-accent"
-      >
-        View All Projects
-        <span className="h-px w-8 bg-current transition-all group-hover:w-12" />
-      </Link>
     </div>
   );
 }

@@ -82,9 +82,9 @@ const SERVICES: Service[] = [
     no: "06",
     title: "Digital Marketing",
     image: "/images/marketing.webp",
-    tags: ["SEO", "Analytics", "Growth", "Content", "Paid Ads"],
+    tags: ["GEO", "SEO", "Analytics", "Growth", "Content", "Paid Ads"],
     description:
-      "We grow brands with marketing that is measured, not guessed — technical SEO, performance analytics, content, and paid campaigns woven directly into the product. We track what matters, double down on what converts, and cut what does not, building compounding, data-driven growth engines that turn fleeting attention into qualified traffic, leads, and lasting revenue for your business.",
+      "GEO — Generative Engine Optimization — is where attention is moving, and we lead with it: getting your brand cited and surfaced inside AI answers from ChatGPT, Perplexity, and Google's AI Overviews. Backed by technical SEO, performance analytics, content, and paid campaigns, we build compounding, data-driven growth engines that turn attention — human and AI alike — into qualified traffic, leads, and lasting revenue.",
   },
 ];
 
@@ -110,14 +110,23 @@ function Wide({
 function TagRow({ tags }: { tags: string[] }) {
   return (
     <div className="flex flex-wrap gap-2 sm:gap-2.5">
-      {tags.map((tag) => (
-        <span
-          key={tag}
-          className="rounded-full border border-white/15 bg-white/[0.02] px-3.5 py-1.5 text-xs font-medium text-off-white/80 sm:px-4 sm:py-2 sm:text-sm"
-        >
-          {tag}
-        </span>
-      ))}
+      {tags.map((tag) => {
+        // GEO is the headline trend — give it an accent treatment so it stands
+        // out from the rest of the tags.
+        const highlight = tag === "GEO";
+        return (
+          <span
+            key={tag}
+            className={
+              highlight
+                ? "rounded-full border border-accent/60 bg-accent/10 px-3.5 py-1.5 text-xs font-semibold text-accent sm:px-4 sm:py-2 sm:text-sm"
+                : "rounded-full border border-white/15 bg-white/[0.02] px-3.5 py-1.5 text-xs font-medium text-off-white/80 sm:px-4 sm:py-2 sm:text-sm"
+            }
+          >
+            {tag}
+          </span>
+        );
+      })}
     </div>
   );
 }
