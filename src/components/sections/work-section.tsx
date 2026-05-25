@@ -330,7 +330,7 @@ function WorkContent({
   onSelect: (i: number) => void;
 }) {
   return (
-    <div className="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-7 xl:grid-cols-[18rem_1fr] xl:gap-10">
+    <div className="grid gap-10 xl:grid-cols-[18rem_1fr] xl:gap-10">
       <CaseList active={active} onSelect={onSelect} />
       <div className="grid gap-10 xl:grid-cols-[0.9fr_1.1fr] xl:items-center xl:gap-8">
         <Detail project={project} />
@@ -357,22 +357,24 @@ export function WorkSection() {
 
   return (
     <section id="work" className="relative overflow-hidden bg-black">
-      {/* mobile: simple cover backdrop */}
+      {/* mobile / mid-width: simple cover backdrop */}
       <Image
         src="/images/ourwork.webp"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover object-center lg:hidden"
+        className="object-cover object-center xl:hidden"
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-black/45 lg:hidden"
+        className="pointer-events-none absolute inset-0 bg-black/45 xl:hidden"
         aria-hidden="true"
       />
 
       {/* desktop: full framed canvas — the entire backdrop (border, columns,
-          frieze) stays visible; content is overlaid inside the frame */}
-      <div className="relative hidden w-full lg:block">
+          frieze) stays visible; content is overlaid inside the frame. Gated at
+          xl (1280px) so the fixed-ratio frame has room; below that the content
+          flows normally and never overflows the frame. */}
+      <div className="relative hidden w-full xl:block">
         <Image
           src="/images/ourwork.webp"
           alt=""
@@ -406,8 +408,8 @@ export function WorkSection() {
         </div>
       </div>
 
-      {/* mobile: content in normal flow */}
-      <div className="relative z-10 mx-auto w-full max-w-[680px] px-5 py-16 lg:hidden">
+      {/* mobile / mid-width: content in normal flow */}
+      <div className="relative z-10 mx-auto w-full max-w-[680px] px-5 py-16 xl:hidden">
         <WorkContent
           active={active}
           project={project}

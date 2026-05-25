@@ -133,7 +133,7 @@ export function HeroContent() {
             className="h-1.5 w-1.5 rounded-full bg-accent"
             aria-hidden="true"
           />
-          A Digital Agency
+          A Digital Studio
         </motion.p>
       </div>
 
@@ -159,7 +159,7 @@ export function HeroContent() {
             {...rise(0.56)}
             className="mt-6 text-lg font-medium text-off-white sm:text-xl"
           >
-            Crafting websites for{" "}
+            Crafting websites and Automation AI systems for{" "}
             <span className="text-accent">ambitious</span> brands.
           </motion.p>
 
@@ -167,8 +167,8 @@ export function HeroContent() {
             {...rise(0.66)}
             className="mt-4 max-w-md text-sm leading-relaxed text-swirl/60"
           >
-            We design and build premium digital experiences that elevate brands,
-            engage audiences, and stand the test of time.
+            We design and build premium websites and AI automation that elevate
+            your brand, engage your audience, and perform for years to come.
           </motion.p>
         </div>
 
@@ -190,7 +190,7 @@ export function HeroContent() {
             Latest Project
           </p>
           <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold uppercase tracking-[0.14em] text-off-white">
-            Eterna
+           Telshi
             <span className="text-swirl/30" aria-hidden="true">
               —
             </span>

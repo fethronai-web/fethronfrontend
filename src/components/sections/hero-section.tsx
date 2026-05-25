@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { HeroClouds } from "@/components/sections/hero-clouds";
 import { HeroStatue } from "@/components/sections/hero-statue";
 import { HeroContent } from "@/components/sections/hero-content";
@@ -37,37 +36,32 @@ function HeroRail() {
 }
 
 function HeroCard() {
+  // Arrow-shaped notch: a triangular bite cut into the left edge, tip pointing
+  // right like a ">" / play glyph. The conic-gradient mask makes only the wedge
+  // transparent (page background shows through); everything else stays opaque so
+  // the rounded corners are preserved. Tweak the apex depth (18px) for size.
+  const arrowNotch =
+    "conic-gradient(from 0deg at 18px 50%, #000 224deg, transparent 226deg, transparent 314deg, #000 316deg)";
+
   return (
-    <div className="relative flex min-h-[32rem] w-full flex-1 flex-col overflow-hidden rounded-[1.75rem] bg-black shadow-[0_40px_120px_-40px_rgba(0,0,0,0.65)] sm:rounded-[2rem] lg:rounded-[2.5rem]">
-      {/* Card backdrop: parallax clouds + statue cutout */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <HeroClouds />
-        <HeroStatue />
-        {/* Legibility washes */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-l from-black/40 via-transparent to-transparent" />
-      </div>
-
-      {/* Play button straddling the left edge */}
-      <Link
-        href="#work"
-        aria-label="Play showreel"
-        className="group absolute left-0 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black text-off-white ring-1 ring-off-white/15 transition-transform hover:scale-105 sm:h-16 sm:w-16"
+    // Shadow wrapper — the filter traces the notched (arrow) outline.
+    <div className="relative flex min-h-[32rem] w-full flex-1 drop-shadow-[0_40px_80px_rgba(0,0,0,0.55)]">
+      <div
+        className="relative flex w-full flex-1 flex-col overflow-hidden rounded-[1.75rem] bg-black sm:rounded-[2rem] lg:rounded-[2.5rem]"
+        style={{ WebkitMaskImage: arrowNotch, maskImage: arrowNotch }}
       >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="currentColor"
-          className="ml-0.5"
-          aria-hidden="true"
-        >
-          <path d="M3 1.5v13l11-6.5L3 1.5Z" />
-        </svg>
-      </Link>
+        {/* Card backdrop: parallax clouds + statue cutout */}
+        <div className="absolute inset-0" aria-hidden="true">
+          <HeroClouds />
+          <HeroStatue />
+          {/* Legibility washes */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-l from-black/40 via-transparent to-transparent" />
+        </div>
 
-      <HeroContent />
+        <HeroContent />
+      </div>
     </div>
   );
 }

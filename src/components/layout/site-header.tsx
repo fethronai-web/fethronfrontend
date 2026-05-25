@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { PAGE_INSET_X, PAGE_INSET_TOP } from "@/config/layout";
 import { NAV_LINKS, SITE } from "@/config/site";
@@ -14,6 +15,7 @@ export function SiteHeader() {
   const [pastHero, setPastHero] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const hero = document.getElementById("hero");
@@ -59,7 +61,11 @@ export function SiteHeader() {
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
-  const onHero = !pastHero;
+  // Light ("on hero") styling only while the menu is closed. With the menu open
+  // we force the solid dark treatment so the dropdown has an opaque backdrop and
+  // its links use light text — otherwise dark links sit invisibly over the dark
+  // hero card at the top of the page.
+  const onHero = !pastHero && !menuOpen;
 
   return (
     <header
@@ -96,7 +102,7 @@ export function SiteHeader() {
             </span>
             <span
               className={cn(
-                "shrink-0",
+                "hidden shrink-0 sm:inline",
                 onHero ? "text-black/55" : "text-off-white/35",
               )}
             >
@@ -181,42 +187,70 @@ export function SiteHeader() {
           </div>
         </div>
 
-        <nav
-          id="mobile-nav"
-          className={cn(
-            "border-t px-4 py-3 lg:hidden",
-            onHero ? "border-black/10" : "border-off-white/10",
-            menuOpen ? "block" : "hidden",
-          )}
-          aria-label="Mobile navigation"
-        >
-          <div className="flex flex-col gap-0.5">
-            {NAV_LINKS.map((link, index) => (
-              <Link
-                key={link.href}
-                ref={index === 0 ? firstLinkRef : undefined}
-                href={link.href}
-                onClick={closeMenu}
-                className={cn(
-                  "rounded-lg px-3 py-2.5 text-sm font-medium uppercase tracking-wider",
-                  onHero
-                    ? "text-black/70 hover:bg-black/5 hover:text-black"
-                    : "text-off-white/70 hover:bg-off-white/5 hover:text-off-white",
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              href="#contact"
-              onClick={closeMenu}
-              className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-medium uppercase tracking-wider text-accent"
+        <AnimatePresence initial={false}>
+          {menuOpen ? (
+            <motion.nav
+              key="mobile-nav"
+              id="mobile-nav"
+              initial={reduce ? false : { height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className={cn(
+                "overflow-hidden border-t px-4 lg:hidden",
+                onHero ? "border-black/10" : "border-off-white/10",
+              )}
+              aria-label="Mobile navigation"
             >
-              Let&apos;s Build
-              <DiagonalArrow />
-            </Link>
-          </div>
-        </nav>
+              <div className="flex flex-col gap-0.5 py-3">
+                {NAV_LINKS.map((link, index) => (
+                  <motion.div
+                    key={link.href}
+                    initial={reduce ? false : { opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeOut",
+                      delay: reduce ? 0 : 0.08 + index * 0.05,
+                    }}
+                  >
+                    <Link
+                      ref={index === 0 ? firstLinkRef : undefined}
+                      href={link.href}
+                      onClick={closeMenu}
+                      className={cn(
+                        "block rounded-lg px-3 py-2.5 text-sm font-medium uppercase tracking-wider",
+                        onHero
+                          ? "text-black/70 hover:bg-black/5 hover:text-black"
+                          : "text-off-white/70 hover:bg-off-white/5 hover:text-off-white",
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                <motion.div
+                  initial={reduce ? false : { opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: "easeOut",
+                    delay: reduce ? 0 : 0.08 + NAV_LINKS.length * 0.05,
+                  }}
+                >
+                  <Link
+                    href="#contact"
+                    onClick={closeMenu}
+                    className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-medium uppercase tracking-wider text-accent"
+                  >
+                    Let&apos;s Build
+                    <DiagonalArrow />
+                  </Link>
+                </motion.div>
+              </div>
+            </motion.nav>
+          ) : null}
+        </AnimatePresence>
       </div>
     </header>
   );

@@ -287,8 +287,68 @@ function Intro() {
   );
 }
 
-export function ServicesSection() {
-  const reduce = useReducedMotion();
+/** Plain stacked list — used on mobile/tablet and for reduced-motion. */
+function ServicesList() {
+  return (
+    <section
+      id="services"
+      className="relative isolate overflow-hidden bg-black py-24 sm:py-32"
+    >
+      <Image
+        src={BACKGROUND}
+        alt=""
+        fill
+        sizes="100vw"
+        className="-z-10 object-cover object-center opacity-90"
+      />
+      <Wide>
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+          <Intro />
+          <div className="flex flex-col gap-6">
+            {SERVICES.map((service) => (
+              <div
+                key={service.no}
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0d]/85 p-6 sm:p-8"
+              >
+                {/* faint full-card image sitting behind the copy */}
+                {service.image && (
+                  <Image
+                    src={service.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 720px, 100vw"
+                    aria-hidden="true"
+                    className="pointer-events-none object-cover object-center opacity-[0.15]"
+                  />
+                )}
+                {/* scrim keeps the text legible over the image */}
+                <div
+                  className="pointer-events-none absolute inset-0 bg-linear-to-r from-[#0a0a0d]/85 via-[#0a0a0d]/55 to-transparent"
+                  aria-hidden="true"
+                />
+                <div className="relative z-10">
+                  <h3 className="font-display text-2xl text-off-white sm:text-3xl">
+                    {service.title}
+                  </h3>
+                  <div className="mt-4">
+                    <TagRow tags={service.tags} />
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-swirl/65">
+                    {service.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Wide>
+    </section>
+  );
+}
+
+/** Scroll-driven card deck — desktop only. Owns the scroll hooks + section ref
+ *  so useScroll's target is always mounted whenever this component renders. */
+function ServicesDeck() {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -312,46 +372,6 @@ export function ServicesSection() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  if (reduce) {
-    return (
-      <section
-        id="services"
-        className="relative isolate overflow-hidden bg-black py-24 sm:py-32"
-      >
-        <Image
-          src={BACKGROUND}
-          alt=""
-          fill
-          sizes="100vw"
-          className="-z-10 object-cover object-center opacity-90"
-        />
-        <Wide>
-          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-            <Intro />
-            <div className="flex flex-col gap-6">
-              {SERVICES.map((service) => (
-                <div
-                  key={service.no}
-                  className="rounded-2xl border border-white/10 bg-[#0a0a0d]/85 p-6 sm:p-8"
-                >
-                  <h3 className="font-display text-2xl text-off-white sm:text-3xl">
-                    {service.title}
-                  </h3>
-                  <div className="mt-4">
-                    <TagRow tags={service.tags} />
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-swirl/65">
-                    {service.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Wide>
-      </section>
-    );
-  }
-
   return (
     <section
       ref={sectionRef}
@@ -360,14 +380,17 @@ export function ServicesSection() {
       style={{ height: `${SERVICES.length * 70}vh` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* full-bleed classical backdrop — fills the full width */}
-        <Image
-          src={BACKGROUND}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
+        {/* full-bleed classical backdrop — wrapped in an absolute box so the
+            fill image has a valid positioned parent (not the sticky one) */}
+        <div className="absolute inset-0">
+          <Image
+            src={BACKGROUND}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
         {/* gentle left wash so the heading stays legible over the art */}
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/55 via-black/10 to-transparent"
@@ -401,4 +424,26 @@ export function ServicesSection() {
       </div>
     </section>
   );
+}
+
+export function ServicesSection() {
+  const reduce = useReducedMotion();
+  // The deck is a desktop-only scroll interaction; mobile/tablet and
+  // reduced-motion get the plain list. isDesktop starts false so SSR and the
+  // first client render agree (no hydration mismatch); the deck only mounts
+  // after detection, which also guarantees useScroll's ref is attached.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    // 1280px (xl), not lg/1024 — the fixed-height card deck needs the extra
+    // width or long descriptions overflow the clipped cards. Below this the
+    // fluid list handles 1024–1280 cleanly.
+    const mq = window.matchMedia("(min-width: 1280px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  if (reduce || !isDesktop) return <ServicesList />;
+  return <ServicesDeck />;
 }
