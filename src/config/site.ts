@@ -1,4 +1,4 @@
-import type { NavLink, ProcessStep, Project, Service, Stat, Testimonial } from "@/types";
+import type { NavLink, Project, Service } from "@/types";
 
 export const SITE = {
   name: "Fethron",
@@ -16,17 +16,6 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Process", href: "#process" },
   { label: "Insights", href: "#insights" },
 ];
-
-export const CLIENTS = [
-  "Nova Finance",
-  "Arc Studios",
-  "Helix Health",
-  "Orbit Commerce",
-  "Vertex Labs",
-  "Pulse Media",
-  "Meridian",
-  "Catalyst",
-] as const;
 
 export const SERVICES: Service[] = [
   {
@@ -158,63 +147,3 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export const PROCESS: ProcessStep[] = [
-  {
-    id: "discover",
-    step: "01",
-    title: "Discover",
-    description: "Deep immersion into your brand, audience, and competitive landscape.",
-  },
-  {
-    id: "define",
-    step: "02",
-    title: "Define",
-    description: "Strategy, information architecture, and a creative direction worth signing off on.",
-  },
-  {
-    id: "design",
-    step: "03",
-    title: "Design",
-    description: "High-fidelity systems tested across mobile, tablet, and desktop before a line of code.",
-  },
-  {
-    id: "deliver",
-    step: "04",
-    title: "Deliver",
-    description: "Engineering, QA on real devices, launch, and ongoing optimization.",
-  },
-];
-
-export const STATS: Stat[] = [
-  { id: "projects", value: "120+", label: "Projects delivered" },
-  { id: "clients", value: "48", label: "Global clients" },
-  { id: "retention", value: "94%", label: "Retention rate" },
-  { id: "awards", value: "18", label: "Design awards" },
-];
-
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: "t1",
-    quote:
-      "Fethron operates at a different level. The site they built for us doesn't just look expensive — it performs like it. Our conversion rate speaks for itself.",
-    author: "Sarah Chen",
-    role: "Chief Marketing Officer",
-    company: "Nova Finance",
-  },
-  {
-    id: "t2",
-    quote:
-      "I've worked with a dozen agencies. Fethron is the only one that treated our codebase like a long-term asset — typed, logged, documented, and beautiful.",
-    author: "Marcus Webb",
-    role: "VP of Engineering",
-    company: "Helix Health",
-  },
-  {
-    id: "t3",
-    quote:
-      "They understood our brand before we did. Every detail — typography, motion, spacing — feels intentional. Our clients notice immediately.",
-    author: "Elena Rossi",
-    role: "Founder & Creative Director",
-    company: "Arc Studios",
-  },
-];
