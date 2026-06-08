@@ -85,29 +85,30 @@ export function SiteHeader() {
     >
       <div
         className={cn(
-          "pointer-events-auto relative w-full transition-[background-color,box-shadow,border-radius] duration-300",
+          "pointer-events-auto w-full transition-[box-shadow,border-radius] duration-300",
           onHero
             ? "bg-transparent"
-            : "overflow-hidden rounded-2xl bg-black/90 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] backdrop-blur-md sm:rounded-full",
+            : "rounded-2xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] sm:rounded-full",
         )}
+        style={
+          onHero
+            ? undefined
+            : {
+                // ~1.5px red gradient ring (padding reveals it); dark-maroon middle
+                // instead of pure black so it stays visible on the dark page.
+                padding: "1.5px",
+                background:
+                  "linear-gradient(130deg, #ef0606 0%, #7a0d0d 38%, #2a0606 52%, #7a0d0d 66%, #ef0606 100%)",
+              }
+        }
       >
-        {/* red + black gradient border — only in the solid (pill) state */}
-        {!onHero && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-full"
-            style={{
-              padding: "1px",
-              background:
-                "linear-gradient(135deg, #ef0606 0%, rgba(239,6,6,0.25) 28%, #000 52%, rgba(239,6,6,0.25) 74%, #ef0606 100%)",
-              WebkitMask:
-                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            }}
-          />
-        )}
-
+        <div
+          className={cn(
+            "relative w-full",
+            onHero ? "" : "overflow-hidden rounded-2xl backdrop-blur-md sm:rounded-full",
+          )}
+          style={onHero ? undefined : { background: "rgba(8,8,11,0.96)" }}
+        >
         <div className="flex items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:px-8">
           <Link
             href="/"
@@ -276,6 +277,7 @@ export function SiteHeader() {
             </motion.nav>
           ) : null}
         </AnimatePresence>
+        </div>
       </div>
     </header>
   );

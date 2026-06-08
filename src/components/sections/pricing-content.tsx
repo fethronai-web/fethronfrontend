@@ -172,8 +172,8 @@ function TierCard({ tier }: { tier: Tier }) {
           style={{ background: "radial-gradient(75% 100% at 50% 0%, rgba(239,6,6,0.13), transparent 70%)" }}
         />
         <div
-          className="absolute inset-0 mix-blend-soft-light"
-          style={{ backgroundImage: NOISE, opacity: 0.7 }}
+          className="absolute inset-0"
+          style={{ backgroundImage: NOISE, opacity: 0.55 }}
         />
         <div
           className="absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
