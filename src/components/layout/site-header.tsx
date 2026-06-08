@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PAGE_INSET_X, PAGE_INSET_TOP } from "@/config/layout";
+import { FETHRON_AGENT_ROUTE } from "@/config/ai-tools";
 import { NAV_LINKS, SITE } from "@/config/site";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/cn";
@@ -166,8 +167,7 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-3 lg:gap-8">
-            <TryMeButton compact className="sm:hidden" />
-            <TryMeButton className="hidden sm:inline-flex" />
+            <TryMeButton />
 
             <Link
               href="/submit"
@@ -269,7 +269,15 @@ export function SiteHeader() {
                   }}
                   className="mt-3 flex flex-col items-stretch gap-3 px-3"
                 >
-                  <TryMeButton onClick={closeMenu} />
+                  <Link
+                    href={FETHRON_AGENT_ROUTE}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={closeMenu}
+                    className="flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-[11px] font-extrabold uppercase tracking-[0.22em] text-accent-foreground"
+                  >
+                    Try Fethron AI Agent
+                  </Link>
                   <Link
                     href="/submit"
                     onClick={closeMenu}

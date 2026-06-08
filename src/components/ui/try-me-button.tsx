@@ -8,14 +8,13 @@ import { cn } from "@/lib/cn";
 interface TryMeButtonProps {
   className?: string;
   onClick?: () => void;
-  compact?: boolean;
 }
 
 /**
  * Passive attention magnet — ripples + ring + glow breathe + periodic
  * double-flash. Text stays still; no hover gimmicks needed to notice it.
  */
-export function TryMeButton({ className, onClick, compact = false }: TryMeButtonProps) {
+export function TryMeButton({ className, onClick }: TryMeButtonProps) {
   const reduce = useReducedMotion();
 
   return (
@@ -51,8 +50,7 @@ export function TryMeButton({ className, onClick, compact = false }: TryMeButton
 
       <motion.span
         className={cn(
-          "relative z-10 inline-flex items-center justify-center rounded-full bg-accent font-extrabold uppercase tracking-[0.22em] text-accent-foreground",
-          compact ? "h-9 px-4 text-[9px]" : "h-9 px-5 text-[10px] sm:h-10 sm:px-6 sm:text-[11px]",
+          "relative z-10 inline-flex h-9 items-center justify-center rounded-full bg-accent px-5 text-[10px] font-extrabold uppercase tracking-[0.22em] text-accent-foreground sm:h-10 sm:px-6 sm:text-[11px]",
         )}
         animate={
           reduce

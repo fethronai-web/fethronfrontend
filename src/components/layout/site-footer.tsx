@@ -98,6 +98,50 @@ function FooterColumn({ heading, links, rule = true }: { heading: string; links:
   );
 }
 
+/**
+ * Framed-footer column. The artwork's baked ruled lines are masked out (see the
+ * `#0d0d0d` overlay in the footer), so these columns own their own look: a
+ * custom accent underline + clean spacing, all in `vw` so the text scales with
+ * the full-bleed temple frame at every width — no drift, nothing to bisect.
+ */
+function FramedColumn({ heading, links }: { heading: string; links: LinkItem[] }) {
+  return (
+    <div>
+      <p
+        className="font-semibold uppercase tracking-[0.22em] text-accent"
+        style={{ fontSize: "clamp(0.6rem,0.72vw,0.85rem)" }}
+      >
+        {heading}
+      </p>
+      <span aria-hidden="true" className="block bg-accent/45" style={{ marginTop: "0.5vw", height: "1.5px", width: "1.7vw" }} />
+      <ul style={{ marginTop: "0.9vw", display: "flex", flexDirection: "column", gap: "0.72vw" }}>
+        {links.map((l) => (
+          <li key={l.label}>
+            {l.service !== undefined ? (
+              <button
+                type="button"
+                onClick={() => selectService(l.service!)}
+                className="cursor-pointer leading-none text-off-white/70 transition-colors hover:text-off-white"
+                style={{ fontSize: "clamp(0.62rem,0.9vw,1.05rem)" }}
+              >
+                {l.label}
+              </button>
+            ) : (
+              <Link
+                href={l.href}
+                className="leading-none text-off-white/70 transition-colors hover:text-off-white"
+                style={{ fontSize: "clamp(0.62rem,0.9vw,1.05rem)" }}
+              >
+                {l.label}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function useEmailToSubmit() {
   const router = useRouter();
   return (e: React.FormEvent<HTMLFormElement>) => {
@@ -284,15 +328,24 @@ export function SiteFooter() {
             <BrandBlock />
           </motion.div>
 
-          {/* Link columns — left edges locked to the baked underlines
-              (25.6% / 38.5% / 51.5% / 64.3%, pitch ≈ 12.9%) */}
+          {/* Mask out the artwork's baked ruled lines + header dashes across the
+              four-column band. The band is a flat #0d0d0d, so this overlay is
+              invisible — it just gives the live columns a clean slate to own. */}
+          <div
+            aria-hidden="true"
+            className="absolute"
+            style={{ left: "24%", top: "52%", width: "53.3%", height: "26.3%", background: "#0d0d0d" }}
+          />
+
+          {/* Link columns — custom underline + spacing on the masked slate
+              (left edges 25.6% / 38.5% / 51.5% / 64.3%, pitch ≈ 12.9%) */}
           <motion.div
             {...reveal(0.2)}
             className="absolute grid grid-cols-4"
             style={{ left: "25.6%", top: "51.99%", width: "52%", columnGap: "0.6%" }}
           >
             {COLUMNS.map((c) => (
-              <FooterColumn key={c.heading} heading={c.heading} links={c.links} rule={false} />
+              <FramedColumn key={c.heading} heading={c.heading} links={c.links} />
             ))}
           </motion.div>
 

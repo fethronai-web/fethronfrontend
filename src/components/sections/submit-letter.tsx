@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { SITE } from "@/config/site";
+import { FETHRON_AGENT_ROUTE } from "@/config/ai-tools";
 import { BrandMark } from "@/components/ui/brand-mark";
 
 const PAPER = "#f3eee3";
@@ -38,6 +40,50 @@ function TempleGlyph() {
       <path d="M6 13v7M11 13v7M17 13v7M22 13v7" />
       <path d="M4 20h20" />
     </svg>
+  );
+}
+
+function SparkGlyph() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2c.5 4.4 1.6 5.5 6 6-4.4.5-5.5 1.6-6 6-.5-4.4-1.6-5.5-6-6 4.4-.5 5.5-1.6 6-6Z" />
+    </svg>
+  );
+}
+
+/** Same postage-stamp look, but it's a live link to the AI agent — gently
+ * pulses + tilts to invite a tap. */
+function TryMeStamp() {
+  const reduce = useReducedMotion();
+  return (
+    <Link
+      href={FETHRON_AGENT_ROUTE}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Try the Fethron AI Agent"
+      className="block shrink-0"
+    >
+      <motion.div
+        className="scalloped scalloped-sm"
+        style={{ background: INK, padding: "3px" }}
+        animate={reduce ? undefined : { scale: [1, 1.07, 1], rotate: [-3, 1.5, -3] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+        whileHover={{ scale: 1.12, rotate: 0 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <div
+          className="flex h-[68px] w-[58px] flex-col items-center justify-center gap-1"
+          style={{ background: PAPER, border: `1px solid ${INK_SOFT}` }}
+        >
+          <span style={{ color: INK }}>
+            <SparkGlyph />
+          </span>
+          <span className="text-[7px] font-bold uppercase tracking-[0.12em]" style={{ color: INK }}>
+            Try Me
+          </span>
+        </div>
+      </motion.div>
+    </Link>
   );
 }
 
@@ -172,21 +218,24 @@ export function SubmitLetter() {
               <Field label="Re" value={form.subject} onChange={set("subject")} placeholder="what you're building" />
             </div>
 
-            <div className="flex shrink-0 gap-3 self-start">
-              <Stamp label="Postage">
-                <span className="block h-7 w-7">
-                  <BrandMark variant="red" />
-                </span>
-              </Stamp>
-              <Stamp label="Postage">
-                <TempleGlyph />
-              </Stamp>
+            <div className="flex shrink-0 flex-col items-center gap-3 self-start">
+              <div className="flex gap-3">
+                <Stamp label="Postage">
+                  <span className="block h-7 w-7">
+                    <BrandMark variant="red" />
+                  </span>
+                </Stamp>
+                <Stamp label="Postage">
+                  <TempleGlyph />
+                </Stamp>
+              </div>
+              <TryMeStamp />
             </div>
           </div>
 
           {/* message */}
           <p className="font-script mt-9 text-3xl" style={{ color: INK }}>
-            Dear Fethron,
+            Hello Fethron,
           </p>
           <textarea
             value={form.message}

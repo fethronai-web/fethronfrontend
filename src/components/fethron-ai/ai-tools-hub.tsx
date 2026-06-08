@@ -256,11 +256,11 @@ export function AiToolsHub() {
             >
         <div className="my-auto flex w-full flex-col items-center">
         <div className="fethron-ai-greeting mb-8 text-center sm:mb-10">
-          <div className="flex items-center justify-center gap-3.5 sm:gap-4">
-            <span className="h-10 w-10 shrink-0 sm:h-11 sm:w-11" aria-hidden="true">
+          <div className="flex items-center justify-center gap-2.5 sm:gap-4">
+            <span className="h-8 w-8 shrink-0 sm:h-11 sm:w-11" aria-hidden="true">
               <BrandMark variant="red" />
             </span>
-            <p className="font-display text-[clamp(2rem,5.5vw,3.5rem)] font-medium leading-[1.08]">
+            <p className="font-display whitespace-nowrap text-[clamp(1.5rem,7vw,3.5rem)] font-medium leading-[1.08]">
               {greeting}, builder
             </p>
           </div>
