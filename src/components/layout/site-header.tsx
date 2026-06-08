@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { PAGE_INSET_X, PAGE_INSET_TOP } from "@/config/layout";
 import { NAV_LINKS, SITE } from "@/config/site";
 import { logger } from "@/lib/logger";
@@ -16,6 +17,13 @@ export function SiteHeader() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const reduce = useReducedMotion();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // Section anchors only exist on the landing page; from any other route send
+  // them home first (e.g. "#work" → "/#work").
+  const resolveHref = (href: string) =>
+    href.startsWith("#") && !isHome ? `/${href}` : href;
 
   useEffect(() => {
     const hero = document.getElementById("hero");
@@ -65,7 +73,7 @@ export function SiteHeader() {
   // we force the solid dark treatment so the dropdown has an opaque backdrop and
   // its links use light text — otherwise dark links sit invisibly over the dark
   // hero card at the top of the page.
-  const onHero = !pastHero && !menuOpen;
+  const onHero = isHome && !pastHero && !menuOpen;
 
   return (
     <header
@@ -77,12 +85,29 @@ export function SiteHeader() {
     >
       <div
         className={cn(
-          "pointer-events-auto w-full transition-[background-color,box-shadow,border-radius] duration-300",
+          "pointer-events-auto relative w-full transition-[background-color,box-shadow,border-radius] duration-300",
           onHero
             ? "bg-transparent"
             : "overflow-hidden rounded-2xl bg-black/90 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] backdrop-blur-md sm:rounded-full",
         )}
       >
+        {/* red + black gradient border — only in the solid (pill) state */}
+        {!onHero && (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-full"
+            style={{
+              padding: "1px",
+              background:
+                "linear-gradient(135deg, #ef0606 0%, rgba(239,6,6,0.25) 28%, #000 52%, rgba(239,6,6,0.25) 74%, #ef0606 100%)",
+              WebkitMask:
+                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+            }}
+          />
+        )}
+
         <div className="flex items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:px-8">
           <Link
             href="/"
@@ -125,7 +150,7 @@ export function SiteHeader() {
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                href={resolveHref(link.href)}
                 className={cn(
                   "text-[11px] font-medium uppercase tracking-[0.16em] transition-colors",
                   onHero
@@ -140,7 +165,7 @@ export function SiteHeader() {
 
           <div className="flex shrink-0 items-center gap-2">
             <Link
-              href="#contact"
+              href={resolveHref("#contact")}
               className="hidden items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-accent transition-opacity hover:opacity-80 sm:flex"
             >
               Let&apos;s Build
@@ -216,7 +241,7 @@ export function SiteHeader() {
                   >
                     <Link
                       ref={index === 0 ? firstLinkRef : undefined}
-                      href={link.href}
+                      href={resolveHref(link.href)}
                       onClick={closeMenu}
                       className={cn(
                         "block rounded-lg px-3 py-2.5 text-sm font-medium uppercase tracking-wider",
@@ -239,7 +264,7 @@ export function SiteHeader() {
                   }}
                 >
                   <Link
-                    href="#contact"
+                    href={resolveHref("#contact")}
                     onClick={closeMenu}
                     className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-medium uppercase tracking-wider text-accent"
                   >
