@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { SITE } from "@/config/site";
 import { BrandMark } from "@/components/ui/brand-mark";
@@ -97,7 +98,17 @@ function FooterColumn({ heading, links, rule = true }: { heading: string; links:
   );
 }
 
+function useEmailToSubmit() {
+  const router = useRouter();
+  return (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = String(new FormData(e.currentTarget).get("email") || "").trim();
+    router.push(email ? `/submit?email=${encodeURIComponent(email)}` : "/submit");
+  };
+}
+
 function Newsletter() {
+  const onSubmit = useEmailToSubmit();
   return (
     <div>
       <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">Stay Inspired</p>
@@ -105,19 +116,20 @@ function Newsletter() {
       <p className="mt-4 text-sm leading-relaxed text-off-white/65">
         Curated thoughts on design, technology, and building digital legacies.
       </p>
-      <div className="mt-4 flex items-center gap-2 rounded-lg border border-off-white/15 bg-black/40 px-3 py-2 focus-within:border-accent/50">
+      <form onSubmit={onSubmit} className="mt-4 flex items-center gap-2 rounded-lg border border-off-white/15 bg-black/40 px-3 py-2 focus-within:border-accent/50">
         <input
+          name="email"
           type="email"
           placeholder="Enter your email"
           aria-label="Email address"
           className="min-w-0 flex-1 bg-transparent text-sm text-off-white placeholder:text-off-white/40 focus:outline-none"
         />
-        <button type="button" aria-label="Subscribe" className="shrink-0 text-accent transition-transform hover:translate-x-0.5">
+        <button type="submit" aria-label="Write to us" className="shrink-0 cursor-pointer text-accent transition-transform hover:translate-x-0.5">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h13M12 5l7 7-7 7" />
           </svg>
         </button>
-      </div>
+      </form>
     </div>
   );
 }
@@ -134,12 +146,12 @@ function Cta() {
       <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-off-white/65 sm:text-base">
         Partner with {SITE.name} to craft digital experiences of timeless design and uncompromising performance.
       </p>
-      <a
-        href={`mailto:${SITE.email}`}
+      <Link
+        href="/submit"
         className="mt-6 inline-block px-8 py-3.5 text-[12px] font-semibold uppercase tracking-[0.25em] text-off-white transition-colors hover:text-accent"
       >
         Start a Project
-      </a>
+      </Link>
     </div>
   );
 }
@@ -181,6 +193,7 @@ function SocialRow({ className = "" }: { className?: string }) {
 export function SiteFooter() {
   const year = new Date().getFullYear();
   const reduce = useReducedMotion();
+  const onEmailSubmit = useEmailToSubmit();
   const viewport = { once: false, amount: 0.2 } as const;
 
   // Smooth "develop" reveal — a soft blur-in + glide rather than a flat fade, so
@@ -206,7 +219,7 @@ export function SiteFooter() {
         transition={{ duration: 0.9, ease: EASE }}
       >
         <Image
-          src="/images/footer.png"
+          src="/images/footer.webp"
           alt=""
           width={1535}
           height={1024}
@@ -245,12 +258,12 @@ export function SiteFooter() {
             {...reveal(0.14)}
             className="absolute inset-x-0 top-[35.8%] flex h-[4.4%] items-center justify-center"
           >
-            <a
-              href={`mailto:${SITE.email}`}
+            <Link
+              href="/submit"
               className="text-[clamp(0.66rem,0.76vw,1rem)] font-semibold uppercase tracking-[0.25em] text-off-white transition-colors hover:text-accent"
             >
               Start a Project
-            </a>
+            </Link>
           </motion.div>
 
           {/* Brand mark — the "F" seated in the open laurel wreath (centre ≈ 13.2%, 57.3%) */}
@@ -296,20 +309,22 @@ export function SiteFooter() {
           </motion.div>
 
           {/* Newsletter input — seated in the baked plate (artwork supplies the frame + arrow) */}
-          <motion.div
+          <motion.form
             {...reveal(0.24)}
+            onSubmit={onEmailSubmit}
             className="absolute"
             style={{ left: "78%", top: "61.1%", height: "4.3%", width: "14.8%" }}
           >
             <input
+              name="email"
               type="email"
               placeholder="Enter your email"
               aria-label="Email address"
               className="absolute inset-0 bg-transparent text-[clamp(0.7rem,0.74vw,0.92rem)] text-off-white placeholder:text-off-white/45 focus:outline-none"
               style={{ paddingLeft: "7%", paddingRight: "18%" }}
             />
-            <button type="submit" aria-label="Subscribe" className="absolute inset-y-0 right-0" style={{ width: "16%" }} />
-          </motion.div>
+            <button type="submit" aria-label="Write to us" className="absolute inset-y-0 right-0 cursor-pointer" style={{ width: "16%" }} />
+          </motion.form>
 
           {/* Contact + legal — seated in the open strip above the greek-key band */}
           <motion.div
@@ -356,7 +371,7 @@ export function SiteFooter() {
 
       {/* ---------- mobile / tablet: clean stacked footer ---------- */}
       <div className="relative overflow-hidden border-t border-off-white/10 xl:hidden">
-        <Image src="/images/footer.png" alt="" fill sizes="100vw" className="object-cover object-top opacity-20" />
+        <Image src="/images/footer.webp" alt="" fill sizes="100vw" className="object-cover object-top opacity-20" />
         <div className="pointer-events-none absolute inset-0 bg-black/70" aria-hidden="true" />
 
         <motion.div

@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
+import { cookies } from "next/headers";
 import { Cinzel, Cormorant_Garamond, Manrope, Pinyon_Script } from "next/font/google";
 import { SITE } from "@/config/site";
 import { env } from "@/config/env";
+import { AI_THEME_INIT_SCRIPT, AI_THEME_STORAGE_KEY } from "@/config/ai-theme-config";
 import { logger } from "@/lib/logger";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { Preloader } from "@/components/layout/preloader";
-import { ReadyProvider } from "@/components/layout/ready-context";
+import { SiteChrome } from "@/components/layout/site-chrome";
+import { VideoPreloader } from "@/components/fethron-ai/video-preloader";
 import "./globals.css";
 
 const sans = Manrope({
@@ -61,28 +62,35 @@ export const viewport: Viewport = {
 
 logger.info("Root layout initialized", { env: env.nodeEnv });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const aiThemeCookie = cookieStore.get(AI_THEME_STORAGE_KEY)?.value;
+  const htmlAiTheme =
+    aiThemeCookie === "dark" || aiThemeCookie === "light" ? aiThemeCookie : undefined;
+
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable} ${brand.variable} ${script.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${sans.variable} ${display.variable} ${brand.variable} ${script.variable} h-full`}
+      data-fethron-ai-theme={htmlAiTheme}
+      suppressHydrationWarning
+    >
       <body className="relative flex min-h-dvh flex-col bg-black antialiased">
+        <Script id="fethron-ai-theme-init" strategy="beforeInteractive">
+          {AI_THEME_INIT_SCRIPT}
+        </Script>
         <a
           href="#main-content"
           className="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-5 focus:py-2.5 focus:text-accent-foreground focus:[clip:auto] focus:[position:fixed] focus:[width:auto] focus:[height:auto] focus:[margin:0] focus:[overflow:visible] focus:[white-space:normal]"
         >
           Skip to content
         </a>
-        <ReadyProvider>
-          <div className="relative z-10 flex min-h-dvh flex-col">
-            <SiteHeader />
-            {children}
-            <SiteFooter />
-            <Preloader />
-          </div>
-        </ReadyProvider>
+        <SiteChrome>{children}</SiteChrome>
+        <VideoPreloader />
       </body>
     </html>
   );

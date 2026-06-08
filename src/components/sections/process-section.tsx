@@ -179,7 +179,7 @@ export function ProcessSection() {
         transition={{ duration: 0.9, ease: EASE }}
       >
         <Image
-          src="/images/process.png"
+          src="/images/process.webp"
           alt=""
           width={VB.w}
           height={VB.h}
@@ -302,7 +302,7 @@ export function ProcessSection() {
       {/* ---------- mobile / tablet: clean vertical timeline ---------- */}
       <div className="relative xl:hidden">
         <Image
-          src="/images/process.png"
+          src="/images/process.webp"
           alt=""
           fill
           sizes="100vw"

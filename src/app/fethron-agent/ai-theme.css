@@ -1,0 +1,764 @@
+/* Fethron AI — scoped theme (warm stone + teal) */
+
+@property --ai-bg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #1f160f;
+}
+
+@property --ai-surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f7e8bf;
+}
+
+@property --ai-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2a1b12;
+}
+
+@property --ai-primary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #368689;
+}
+
+@property --ai-stone {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #debf89;
+}
+
+@property --ai-brown-dark {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #503520;
+}
+
+@property --ai-bar-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f7e8bf;
+}
+
+.fethron-ai {
+  --ai-theme-duration: 900ms;
+  --ai-theme-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ai-bg: #1f160f;
+  --ai-surface: #f7e8bf;
+  --ai-surface-muted: color-mix(in srgb, var(--ai-surface) 72%, var(--ai-bg));
+  --ai-primary: #368689;
+  --ai-primary-soft: #76a18f;
+  --ai-stone: #debf89;
+  --ai-gold: #c7a06b;
+  --ai-brown: #6c5036;
+  --ai-brown-dark: #503520;
+  --ai-olive: #647461;
+  --ai-text: #2a1b12;
+  --ai-text-muted: #6c5036;
+  --ai-placeholder: color-mix(in srgb, var(--ai-brown-dark) 72%, var(--ai-olive));
+  --ai-border: color-mix(in srgb, var(--ai-brown) 28%, transparent);
+  --ai-glass: color-mix(in srgb, var(--ai-surface) 88%, transparent);
+  --ai-bar-text: var(--ai-surface);
+  --ai-bar-accent: var(--ai-stone);
+  --ai-greeting-shadow: rgba(247, 232, 191, 0.9);
+  --ai-overlay-top: 45%;
+  --ai-overlay-mid: 15%;
+  --ai-overlay-bottom: 55%;
+  --ai-panel-tint: white;
+  --ai-inset-shine: color-mix(in srgb, white 45%, transparent);
+  --ai-edge-shine: color-mix(in srgb, white 35%, transparent);
+  --ai-panel-border: color-mix(in srgb, var(--ai-brown) 35%, transparent);
+  --ai-panel-drop: rgba(42, 27, 18, 0.6);
+
+  min-height: 100dvh;
+  color: var(--ai-text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--ai-bg);
+  transition:
+    --ai-bg var(--ai-theme-duration) var(--ai-theme-ease),
+    --ai-surface var(--ai-theme-duration) var(--ai-theme-ease),
+    --ai-text var(--ai-theme-duration) var(--ai-theme-ease),
+    --ai-primary var(--ai-theme-duration) var(--ai-theme-ease),
+    --ai-stone var(--ai-theme-duration) var(--ai-theme-ease),
+    --ai-brown-dark var(--ai-theme-duration) var(--ai-theme-ease),
+    --ai-bar-text var(--ai-theme-duration) var(--ai-theme-ease),
+    background-color var(--ai-theme-duration) var(--ai-theme-ease),
+    color var(--ai-theme-duration) var(--ai-theme-ease);
+}
+
+.fethron-ai-prompt,
+.fethron-ai-chip,
+.fethron-ai-sidebar,
+.fethron-ai-model-picker,
+.fethron-ai-header-login,
+.fethron-ai-theme-toggle,
+.fethron-ai-sidebar-open-btn,
+.fethron-ai-user-trigger,
+.fethron-ai-greeting,
+.fethron-ai-chip-icon,
+.fethron-ai-sidebar-item,
+.fethron-ai-prompt-field,
+.fethron-ai-model-menu,
+.fethron-ai-attach-menu,
+.fethron-ai-user-menu,
+.fethron-ai-login-modal {
+  transition:
+    background var(--ai-theme-duration) var(--ai-theme-ease),
+    background-color var(--ai-theme-duration) var(--ai-theme-ease),
+    border-color var(--ai-theme-duration) var(--ai-theme-ease),
+    color var(--ai-theme-duration) var(--ai-theme-ease),
+    box-shadow var(--ai-theme-duration) var(--ai-theme-ease),
+    text-shadow var(--ai-theme-duration) var(--ai-theme-ease),
+    filter var(--ai-theme-duration) var(--ai-theme-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fethron-ai,
+  .fethron-ai-prompt,
+  .fethron-ai-chip,
+  .fethron-ai-sidebar,
+  .fethron-ai-model-picker,
+  .fethron-ai-header-login,
+  .fethron-ai-theme-toggle,
+  .fethron-ai-sidebar-open-btn,
+  .fethron-ai-user-trigger,
+  .fethron-ai-greeting,
+  .fethron-ai-chip-icon,
+  .fethron-ai-sidebar-item,
+  .fethron-ai-prompt-field,
+  .fethron-ai-model-menu,
+  .fethron-ai-attach-menu,
+  .fethron-ai-user-menu,
+  .fethron-ai-login-modal {
+    transition: none !important;
+  }
+}
+
+html[data-fethron-ai-theme="dark"] .fethron-ai-video-light {
+  opacity: 0;
+}
+
+html[data-fethron-ai-theme="dark"] .fethron-ai-video-dark {
+  opacity: 1;
+  z-index: 1;
+}
+
+html[data-fethron-ai-theme="light"] .fethron-ai-video-light {
+  opacity: 1;
+  z-index: 1;
+}
+
+html[data-fethron-ai-theme="light"] .fethron-ai-video-dark {
+  opacity: 0;
+}
+
+html[data-fethron-ai-theme="dark"] .fethron-ai,
+.fethron-ai[data-theme="dark"] {
+  --ai-bg: #101820;
+  --ai-surface: #24303c;
+  --ai-surface-muted: color-mix(in srgb, var(--ai-surface) 78%, var(--ai-bg));
+  --ai-primary: #5eb8bb;
+  --ai-primary-soft: #89cdd0;
+  --ai-stone: #8fa3b0;
+  --ai-gold: #7a909e;
+  --ai-brown: #5a7280;
+  --ai-brown-dark: #c4d0d8;
+  --ai-olive: #6a8488;
+  --ai-text: #edf1f4;
+  --ai-text-muted: #a4b4bf;
+  --ai-placeholder: color-mix(in srgb, var(--ai-text-muted) 88%, var(--ai-olive));
+  --ai-border: color-mix(in srgb, var(--ai-stone) 22%, transparent);
+  --ai-glass: color-mix(in srgb, var(--ai-surface) 86%, transparent);
+  --ai-bar-text: #edf1f4;
+  --ai-bar-accent: #a8b8c4;
+  --ai-greeting-shadow: rgba(16, 24, 32, 0.72);
+  --ai-overlay-top: 38%;
+  --ai-overlay-mid: 12%;
+  --ai-overlay-bottom: 46%;
+  --ai-panel-tint: #162028;
+  --ai-inset-shine: color-mix(in srgb, var(--ai-stone) 10%, transparent);
+  --ai-edge-shine: transparent;
+  --ai-panel-border: color-mix(in srgb, var(--ai-stone) 18%, transparent);
+  --ai-panel-drop: rgba(0, 0, 0, 0.34);
+}
+
+.fethron-ai-bg-overlay {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ai-bg) var(--ai-overlay-top), transparent) 0%,
+    color-mix(in srgb, var(--ai-bg) var(--ai-overlay-mid), transparent) 50%,
+    color-mix(in srgb, var(--ai-bg) var(--ai-overlay-bottom), transparent) 100%
+  );
+  pointer-events: none;
+}
+
+.fethron-ai ::selection {
+  background: color-mix(in srgb, var(--ai-primary) 35%, transparent);
+  color: var(--ai-text);
+}
+
+.fethron-ai-panel {
+  background: var(--ai-glass);
+  border: 1px solid var(--ai-border);
+  box-shadow:
+    0 32px 80px -24px rgba(42, 27, 18, 0.55),
+    inset 0 1px 0 var(--ai-inset-shine);
+  backdrop-filter: blur(20px);
+}
+
+.fethron-ai-prompt {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--ai-surface) 96%, var(--ai-panel-tint)) 0%,
+    var(--ai-surface) 42%,
+    color-mix(in srgb, var(--ai-surface) 88%, var(--ai-stone)) 100%
+  );
+  border: 1px solid var(--ai-panel-border);
+  box-shadow:
+    0 28px 70px -28px var(--ai-panel-drop),
+    inset 0 1px 0 var(--ai-inset-shine);
+  backdrop-filter: blur(22px);
+  overflow: visible;
+}
+
+.fethron-ai-prompt-toolbar {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid color-mix(in srgb, var(--ai-brown) 18%, transparent);
+  overflow: visible;
+}
+
+.fethron-ai-icon-btn {
+  color: var(--ai-brown-dark);
+  background: transparent;
+  border: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.fethron-ai-icon-btn:hover {
+  opacity: 0.72;
+  transform: scale(1.05);
+}
+
+.fethron-ai-attach-menu {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--ai-surface) 94%, var(--ai-panel-tint)) 0%,
+    var(--ai-surface) 55%,
+    color-mix(in srgb, var(--ai-surface) 86%, var(--ai-primary-soft)) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 30%, transparent);
+  box-shadow: 0 20px 50px -20px rgba(42, 27, 18, 0.45);
+}
+
+.fethron-ai-attach-item {
+  color: var(--ai-text);
+  transition: background 0.15s ease;
+}
+
+.fethron-ai-attach-item:hover {
+  background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
+}
+
+.fethron-ai-model-picker {
+  color: var(--ai-text);
+  background: color-mix(in srgb, var(--ai-brown) 8%, var(--ai-surface));
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 18%, transparent);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.fethron-ai-model-picker:hover {
+  background: color-mix(in srgb, var(--ai-brown) 14%, var(--ai-surface));
+  border-color: color-mix(in srgb, var(--ai-primary) 28%, var(--ai-border));
+}
+
+.fethron-ai-model-menu {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--ai-surface) 94%, var(--ai-panel-tint)) 0%,
+    var(--ai-surface) 55%,
+    color-mix(in srgb, var(--ai-surface) 86%, var(--ai-primary-soft)) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 30%, transparent);
+  box-shadow: 0 20px 50px -20px rgba(42, 27, 18, 0.45);
+}
+
+.fethron-ai-model-item {
+  color: var(--ai-text);
+  transition: background 0.15s ease;
+}
+
+.fethron-ai-model-item:hover,
+.fethron-ai-model-item[data-active="true"] {
+  background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
+}
+
+.fethron-ai-send-btn {
+  color: var(--ai-surface);
+  background: var(--ai-primary);
+  box-shadow: 0 6px 20px -6px rgba(54, 134, 137, 0.55);
+  transition: filter 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.fethron-ai-send-btn[data-ready="true"]:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: scale(1.04);
+}
+
+.fethron-ai-send-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.fethron-ai-greeting {
+  color: var(--ai-text);
+  text-shadow: 0 2px 20px var(--ai-greeting-shadow);
+}
+
+.fethron-ai-greeting p {
+  color: inherit;
+  text-shadow: inherit;
+}
+
+.fethron-ai-subtitle {
+  color: color-mix(in srgb, var(--ai-text) 88%, var(--ai-text-muted));
+  text-shadow: 0 1px 14px var(--ai-greeting-shadow);
+}
+
+.fethron-ai-prompt-field {
+  color: var(--ai-text);
+  font-weight: 500;
+  min-height: 5.5rem;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ai-primary) 45%, transparent) transparent;
+}
+
+.fethron-ai-prompt-field::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fethron-ai-prompt-field::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ai-primary) 45%, transparent);
+  border-radius: 999px;
+}
+
+@media (min-width: 640px) {
+  .fethron-ai-prompt-field {
+    min-height: 6.5rem;
+  }
+}
+
+.fethron-ai-prompt-field::placeholder {
+  color: var(--ai-brown-dark);
+  opacity: 0.75;
+}
+
+/* Teal focus — override studio red :focus-visible from globals.css */
+.fethron-ai textarea:focus,
+.fethron-ai textarea:focus-visible,
+.fethron-ai input:focus,
+.fethron-ai input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.fethron-ai-prompt:focus-within {
+  border-color: color-mix(in srgb, var(--ai-primary) 60%, var(--ai-border));
+  box-shadow:
+    0 28px 70px -28px rgba(42, 27, 18, 0.6),
+    0 0 0 3px color-mix(in srgb, var(--ai-primary) 22%, transparent);
+}
+
+.fethron-ai button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ai-primary) 65%, transparent);
+  outline-offset: 2px;
+}
+
+.fethron-ai-chip-heading {
+  color: var(--ai-brown-dark);
+  text-shadow: 0 1px 12px var(--ai-greeting-shadow);
+}
+
+.fethron-ai-chip {
+  background: color-mix(in srgb, var(--ai-surface) 78%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 32%, transparent);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 28px -18px rgba(42, 27, 18, 0.45);
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.fethron-ai-chip-label {
+  color: var(--ai-text);
+}
+
+.fethron-ai-chip-hint {
+  color: var(--ai-text-muted);
+}
+
+.fethron-ai-chip-icon {
+  background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
+  color: var(--ai-primary);
+  border: 1px solid color-mix(in srgb, var(--ai-primary) 18%, transparent);
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+}
+
+.fethron-ai-chip:hover {
+  border-color: color-mix(in srgb, var(--ai-primary) 42%, var(--ai-border));
+  background: color-mix(in srgb, var(--ai-surface) 92%, transparent);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px -16px rgba(54, 134, 137, 0.35);
+}
+
+.fethron-ai-chip[data-active="true"] {
+  background: color-mix(in srgb, var(--ai-surface) 94%, var(--ai-panel-tint));
+  border-color: color-mix(in srgb, var(--ai-primary) 55%, var(--ai-brown));
+  box-shadow:
+    0 12px 28px -12px rgba(54, 134, 137, 0.35),
+    inset 0 0 0 1px color-mix(in srgb, var(--ai-primary) 18%, transparent);
+}
+
+.fethron-ai-chip[data-active="true"] .fethron-ai-chip-label {
+  color: var(--ai-text);
+}
+
+.fethron-ai-chip[data-active="true"] .fethron-ai-chip-hint {
+  color: var(--ai-text-muted);
+  opacity: 1;
+}
+
+.fethron-ai-chip[data-active="true"] .fethron-ai-chip-icon {
+  background: color-mix(in srgb, var(--ai-primary) 16%, var(--ai-surface));
+  color: var(--ai-primary);
+  border-color: color-mix(in srgb, var(--ai-primary) 28%, transparent);
+}
+
+.fethron-ai-tool-card {
+  background: color-mix(in srgb, var(--ai-surface) 55%, transparent);
+  border: 1px solid var(--ai-border);
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.fethron-ai-tool-card:hover {
+  border-color: color-mix(in srgb, var(--ai-primary) 45%, var(--ai-border));
+  background: color-mix(in srgb, var(--ai-surface) 78%, transparent);
+  box-shadow: 0 12px 40px -16px rgba(54, 134, 137, 0.35);
+}
+
+.fethron-ai-tool-card[data-active="true"] {
+  border-color: var(--ai-primary);
+  background: color-mix(in srgb, var(--ai-surface) 92%, transparent);
+  box-shadow: 0 16px 48px -20px rgba(54, 134, 137, 0.45);
+}
+
+.fethron-ai-btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--ai-primary) 0%,
+    color-mix(in srgb, var(--ai-primary) 75%, var(--ai-brown-dark)) 100%
+  );
+  color: var(--ai-surface);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.fethron-ai-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.fethron-ai-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.fethron-ai-input {
+  background: color-mix(in srgb, var(--ai-surface) 65%, var(--ai-panel-tint));
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text);
+}
+
+.fethron-ai-input::placeholder {
+  color: var(--ai-text-muted);
+}
+
+.fethron-ai-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--ai-primary) 55%, var(--ai-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-primary) 18%, transparent);
+}
+
+.fethron-ai-header-login {
+  color: var(--ai-bar-text);
+  border: 1px solid color-mix(in srgb, var(--ai-bar-text) 30%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 40%, transparent);
+  backdrop-filter: blur(8px);
+  transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.fethron-ai-header-login:hover {
+  opacity: 0.92;
+  border-color: color-mix(in srgb, var(--ai-bar-text) 45%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 52%, transparent);
+}
+
+.fethron-ai-theme-toggle {
+  color: var(--ai-bar-text);
+  border: 1px solid color-mix(in srgb, var(--ai-bar-text) 28%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 42%, transparent);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.fethron-ai-theme-toggle:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--ai-bar-text) 42%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 54%, transparent);
+}
+
+.fethron-ai-theme-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fethron-ai-user-trigger {
+  color: var(--ai-bar-text);
+  border: 1px solid color-mix(in srgb, var(--ai-bar-text) 28%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 42%, transparent);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.fethron-ai-user-trigger:hover {
+  border-color: color-mix(in srgb, var(--ai-bar-text) 42%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 54%, transparent);
+}
+
+.fethron-ai-user-menu {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--ai-surface) 94%, var(--ai-panel-tint)) 0%,
+    var(--ai-surface) 55%,
+    color-mix(in srgb, var(--ai-surface) 86%, var(--ai-primary-soft)) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 30%, transparent);
+  box-shadow: 0 20px 50px -20px rgba(42, 27, 18, 0.45);
+}
+
+.fethron-ai-user-menu-item {
+  color: var(--ai-text);
+  transition: background 0.15s ease;
+}
+
+.fethron-ai-user-menu-item:hover {
+  background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
+}
+
+.fethron-ai-login-backdrop {
+  background: color-mix(in srgb, var(--ai-bg) 82%, black);
+  backdrop-filter: blur(10px);
+}
+
+.fethron-ai-login-modal {
+  background: var(--ai-surface);
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 35%, transparent);
+  box-shadow:
+    0 28px 70px -28px rgba(42, 27, 18, 0.75),
+    inset 0 1px 0 var(--ai-inset-shine);
+  color: var(--ai-text);
+}
+
+.fethron-ai-login-close {
+  color: var(--ai-brown-dark);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.fethron-ai-login-close:hover {
+  background: color-mix(in srgb, var(--ai-brown) 10%, var(--ai-surface));
+  color: var(--ai-text);
+}
+
+.fethron-ai-login-icon {
+  color: var(--ai-primary);
+  background: color-mix(in srgb, var(--ai-primary) 14%, var(--ai-surface));
+}
+
+.fethron-ai-login-title {
+  color: var(--ai-text);
+}
+
+.fethron-ai-login-subtitle {
+  color: var(--ai-text-muted);
+}
+
+.fethron-ai-login-label {
+  color: var(--ai-brown-dark);
+}
+
+.fethron-ai-login-input {
+  color: var(--ai-text);
+  background: color-mix(in srgb, var(--ai-brown) 6%, var(--ai-panel-tint));
+  border: 1px solid color-mix(in srgb, var(--ai-brown) 24%, transparent);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fethron-ai-login-input::placeholder {
+  color: var(--ai-brown-dark);
+  opacity: 0.55;
+}
+
+.fethron-ai-login-input:focus,
+.fethron-ai-login-input:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--ai-primary) 55%, var(--ai-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-primary) 18%, transparent);
+}
+
+.fethron-ai-login-submit {
+  color: var(--ai-surface);
+  background: var(--ai-primary);
+  box-shadow: 0 6px 20px -6px rgba(54, 134, 137, 0.55);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.fethron-ai-login-submit:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+/* Sidebar — glass panel, pushes main content */
+.fethron-ai-sidebar {
+  --ai-sidebar-width: 15.5rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ai-surface) 90%, transparent) 0%,
+    color-mix(in srgb, var(--ai-surface) 84%, transparent) 100%
+  );
+  border-right: 1px solid color-mix(in srgb, var(--ai-brown) 18%, transparent);
+  box-shadow:
+    inset -1px 0 0 var(--ai-edge-shine),
+    14px 0 44px -18px var(--ai-panel-drop);
+  backdrop-filter: blur(20px) saturate(1.08);
+  -webkit-backdrop-filter: blur(20px) saturate(1.08);
+}
+
+html[data-fethron-ai-theme="dark"] .fethron-ai-sidebar,
+.fethron-ai[data-theme="dark"] .fethron-ai-sidebar {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ai-surface) 94%, var(--ai-panel-tint)) 0%,
+    color-mix(in srgb, var(--ai-surface) 90%, var(--ai-bg)) 100%
+  );
+  backdrop-filter: blur(16px) saturate(1.05);
+  -webkit-backdrop-filter: blur(16px) saturate(1.05);
+}
+
+.fethron-ai-sidebar-open-btn {
+  color: var(--ai-bar-text);
+  border: 1px solid color-mix(in srgb, var(--ai-bar-text) 28%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 42%, transparent);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.fethron-ai-sidebar-open-btn:hover {
+  border-color: color-mix(in srgb, var(--ai-bar-text) 42%, transparent);
+  background: color-mix(in srgb, var(--ai-bg) 54%, transparent);
+}
+
+.fethron-ai-sidebar-head {
+  min-height: 3rem;
+}
+
+.fethron-ai-sidebar-icon-btn {
+  color: var(--ai-brown-dark);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.fethron-ai-sidebar-icon-btn:hover {
+  color: var(--ai-text);
+  background: color-mix(in srgb, var(--ai-brown) 10%, var(--ai-surface));
+}
+
+.fethron-ai-sidebar-divider {
+  height: 1px;
+  background: color-mix(in srgb, var(--ai-brown) 16%, transparent);
+}
+
+.fethron-ai-sidebar-section {
+  color: var(--ai-text-muted);
+}
+
+.fethron-ai-sidebar-muted {
+  color: var(--ai-text-muted);
+}
+
+.fethron-ai-sidebar-item {
+  color: var(--ai-brown-dark);
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fethron-ai-sidebar-item:hover:not(:disabled) {
+  color: var(--ai-text);
+  background: color-mix(in srgb, var(--ai-brown) 8%, var(--ai-surface));
+}
+
+.fethron-ai-sidebar-item[data-active="true"] {
+  color: var(--ai-primary);
+  background: color-mix(in srgb, var(--ai-primary) 10%, var(--ai-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ai-primary) 22%, transparent);
+}
+
+.fethron-ai-sidebar-item-muted {
+  opacity: 0.55;
+}
+
+.fethron-ai-sidebar-item:disabled {
+  cursor: not-allowed;
+}
+
+.fethron-ai-sidebar-icon {
+  color: inherit;
+}
+
+.fethron-ai-sidebar-item[data-active="true"] .fethron-ai-sidebar-icon {
+  color: var(--ai-primary);
+}
+
+.fethron-ai-sidebar-recents {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ai-brown) 25%, transparent) transparent;
+}
+
+.fethron-ai-sidebar-login,
+.fethron-ai-sidebar-account {
+  color: var(--ai-text);
+  transition: background 0.15s ease;
+}
+
+.fethron-ai-sidebar-login:hover,
+.fethron-ai-sidebar-account:hover {
+  background: color-mix(in srgb, var(--ai-brown) 8%, var(--ai-surface));
+}
+
+.fethron-ai-sidebar-avatar {
+  color: var(--ai-primary);
+  background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
+  border: 1px solid color-mix(in srgb, var(--ai-primary) 18%, transparent);
+}
+
+@media (max-width: 640px) {
+  .fethron-ai-sidebar {
+    --ai-sidebar-width: 14rem;
+  }
+}

@@ -10,6 +10,7 @@ import { logger } from "@/lib/logger";
 import { cn } from "@/lib/cn";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { DiagonalArrow } from "@/components/ui/diagonal-arrow";
+import { TryMeButton } from "@/components/ui/try-me-button";
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -164,13 +165,16 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3 lg:gap-8">
+            <TryMeButton compact className="sm:hidden" />
+            <TryMeButton className="hidden sm:inline-flex" />
+
             <Link
-              href={resolveHref("#contact")}
-              className="hidden items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-accent transition-opacity hover:opacity-80 sm:flex"
+              href="/submit"
+              className="group hidden items-center gap-2 text-[11px] uppercase tracking-[0.16em] lg:flex"
             >
-              Let&apos;s Build
-              <DiagonalArrow />
+              <span className="font-extrabold text-accent">Let&apos;s Build</span>
+              <DiagonalArrow className="text-accent/70 transition-opacity group-hover:opacity-100" />
             </Link>
 
             <button
@@ -263,14 +267,16 @@ export function SiteHeader() {
                     ease: "easeOut",
                     delay: reduce ? 0 : 0.08 + NAV_LINKS.length * 0.05,
                   }}
+                  className="mt-3 flex flex-col items-stretch gap-3 px-3"
                 >
+                  <TryMeButton onClick={closeMenu} />
                   <Link
-                    href={resolveHref("#contact")}
+                    href="/submit"
                     onClick={closeMenu}
-                    className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-medium uppercase tracking-wider text-accent"
+                    className="flex items-center justify-center gap-2 py-2 text-sm uppercase tracking-wider"
                   >
-                    Let&apos;s Build
-                    <DiagonalArrow />
+                    <span className="font-extrabold text-accent">Let&apos;s Build</span>
+                    <DiagonalArrow className="text-accent/70" />
                   </Link>
                 </motion.div>
               </div>
