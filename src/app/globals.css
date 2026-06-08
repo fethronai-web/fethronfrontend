@@ -81,6 +81,22 @@ body {
   outline-offset: 3px;
 }
 
+/* Interactive elements always show the hand pointer (Tailwind's reset leaves
+   buttons on the default arrow). Disabled controls show not-allowed. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+label[for],
+summary,
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 /* Custom scrollbar — red + swirl combination, no arrow buttons.
    We deliberately do NOT set scrollbar-width for WebKit: in modern Chromium that
    switches to the standard scrollbar and ignores ::-webkit-scrollbar rules,

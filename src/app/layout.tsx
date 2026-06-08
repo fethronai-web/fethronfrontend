@@ -40,7 +40,7 @@ const script = Pinyon_Script({
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.name} — Digital Agency`,
+    default: `${SITE.name} — Digital Studio`,
     template: `%s — ${SITE.name}`,
   },
   description: SITE.description,

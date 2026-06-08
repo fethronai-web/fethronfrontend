@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { selectCase } from "@/lib/select-case";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/cn";
 import { usePointerParallax } from "@/hooks/use-pointer-parallax";
@@ -195,13 +195,14 @@ export function HeroContent() {
             <span className="text-swirl/30" aria-hidden="true">
               —
             </span>
-            <Link
-              href="#work"
+            <button
+              type="button"
+              onClick={() => selectCase("telshi")}
               className="inline-flex items-center gap-2 text-accent transition-opacity hover:opacity-80"
             >
               View Case Study
               <RightArrow />
-            </Link>
+            </button>
           </p>
         </div>
       </motion.div>

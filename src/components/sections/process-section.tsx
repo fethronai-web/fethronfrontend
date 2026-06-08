@@ -1,8 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -153,13 +153,28 @@ export function ProcessSection() {
   // when you scroll in and out, as requested.
   const viewport = { once: false, amount: 0.35 } as const;
 
+  // Scroll-linked parallax so the celestial canvas drifts as you pass it —
+  // gives the static engraving a sense of depth instead of sitting dead still.
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const canvasY = useTransform(scrollYProgress, [0, 1], [48, -48]);
+  const canvasScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.06, 1.02, 1.06]);
+
   return (
-    <section id="process" className="relative overflow-hidden border-t border-off-white/10 bg-black">
+    <section
+      ref={sectionRef}
+      id="process"
+      className="relative overflow-hidden border-t border-off-white/10 bg-black"
+    >
       {/* ---------- desktop: framed celestial canvas ---------- */}
       <motion.div
         className="relative hidden w-full xl:block"
-        initial={reduce ? false : { opacity: 0, scale: 0.96 }}
-        whileInView={{ opacity: 1, scale: 1 }}
+        style={reduce ? undefined : { y: canvasY, scale: canvasScale }}
+        initial={reduce ? false : { opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.9, ease: EASE }}
       >
@@ -178,16 +193,20 @@ export function ProcessSection() {
           className="pointer-events-none absolute inset-0 h-full w-full"
           aria-hidden="true"
         >
-          {/* connector lines node → card (drawn under the HTML cards) */}
-          {STEPS.map((s) => (
-            <line
+          {/* connector lines node → card — draw outward from each node */}
+          {STEPS.map((s, i) => (
+            <motion.line
               key={s.no}
               x1={vx(s.node.x)}
               y1={vy(s.node.y)}
               x2={vx(s.card.x)}
               y2={vy(s.card.y)}
-              stroke="rgba(239,238,232,0.12)"
+              stroke="rgba(239,238,232,0.18)"
               strokeWidth={1}
+              initial={reduce ? false : { pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 1 }}
+              viewport={viewport}
+              transition={{ duration: 0.55, ease: EASE, delay: 0.15 + i * 0.1 }}
             />
           ))}
 
@@ -235,17 +254,17 @@ export function ProcessSection() {
           >
             <motion.div
               className="flex h-16 w-16 items-center justify-center rounded-full border border-off-white/15 bg-black/70 backdrop-blur-sm"
-              initial={reduce ? false : { opacity: 0, scale: 0.8 }}
+              initial={reduce ? false : { opacity: 0, scale: 0.3 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={viewport}
-              transition={{ duration: 0.55, ease: EASE, delay: 0.1 + i * 0.08 }}
+              transition={{ type: "spring", stiffness: 240, damping: 16, delay: 0.25 + i * 0.1 }}
             >
               <span className="font-display text-2xl text-accent">{s.no}</span>
             </motion.div>
           </div>
         ))}
 
-        {/* cards */}
+        {/* cards — each glides out from its node along the connector */}
         {STEPS.map((s, i) => (
           <div
             key={`card-${s.no}`}
@@ -254,10 +273,19 @@ export function ProcessSection() {
           >
             <motion.div
               className="rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-sm"
-              initial={reduce ? false : { opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={
+                reduce
+                  ? false
+                  : {
+                      opacity: 0,
+                      scale: 0.9,
+                      x: Math.sign(s.node.x - s.card.x) * 34,
+                      y: Math.sign(s.node.y - s.card.y) * 34,
+                    }
+              }
+              whileInView={{ opacity: 1, scale: 1, x: 0, y: 0 }}
               viewport={viewport}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.18 + i * 0.08 }}
+              transition={{ type: "spring", stiffness: 130, damping: 19, delay: 0.34 + i * 0.1 }}
             >
               <div className="flex items-center gap-2.5">
                 <s.Icon className="h-5 w-5 shrink-0 text-accent" />

@@ -11,6 +11,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
+import { SELECT_SERVICE_EVENT } from "@/lib/select-case";
 
 function ArrowRight({ className }: { className?: string }) {
   return (
@@ -298,6 +299,18 @@ function Intro() {
 
 /** Plain stacked list — used on mobile/tablet and for reduced-motion. */
 function ServicesList() {
+  // Deep-link from the footer: scroll the matching card into view.
+  useEffect(() => {
+    const onSelect = (e: Event) => {
+      const i = (e as CustomEvent<{ index: number }>).detail?.index ?? 0;
+      document
+        .getElementById(`service-${i}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    window.addEventListener(SELECT_SERVICE_EVENT, onSelect);
+    return () => window.removeEventListener(SELECT_SERVICE_EVENT, onSelect);
+  }, []);
+
   return (
     <section
       id="services"
@@ -314,10 +327,11 @@ function ServicesList() {
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <Intro />
           <div className="flex flex-col gap-6">
-            {SERVICES.map((service) => (
+            {SERVICES.map((service, i) => (
               <div
                 key={service.no}
-                className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0d]/85 p-6 sm:p-8"
+                id={`service-${i}`}
+                className="relative scroll-mt-24 overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0d]/85 p-6 sm:p-8"
               >
                 {/* faint full-card image sitting behind the copy */}
                 {service.image && (
@@ -379,6 +393,22 @@ function ServicesDeck() {
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Deep-link from the footer: card i is "active" at scroll progress i/(n-1),
+  // so translate that back into a scroll position and glide there.
+  useEffect(() => {
+    const onSelect = (e: Event) => {
+      const i = (e as CustomEvent<{ index: number }>).detail?.index ?? 0;
+      const sec = sectionRef.current;
+      if (!sec) return;
+      const travel = sec.offsetHeight - window.innerHeight;
+      const n = SERVICES.length;
+      const top = sec.offsetTop + (n > 1 ? i / (n - 1) : 0) * travel;
+      window.scrollTo({ top, behavior: "smooth" });
+    };
+    window.addEventListener(SELECT_SERVICE_EVENT, onSelect);
+    return () => window.removeEventListener(SELECT_SERVICE_EVENT, onSelect);
   }, []);
 
   return (

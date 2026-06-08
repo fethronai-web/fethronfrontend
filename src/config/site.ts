@@ -4,7 +4,7 @@ export const SITE = {
   name: "Fethron",
   tagline: "We craft digital experiences that feel inevitable.",
   description:
-    "A boutique digital agency partnering with ambitious brands on strategy, design, and engineering — from first pixel to production scale.",
+    "A boutique Studio partnering with ambitious brands on strategy, design, and engineering — from first pixel to production scale.",
   email: "hello@fethron.studio",
   url: "https://fethron.studio",
 } as const;
@@ -90,7 +90,7 @@ export const PROJECTS: Project[] = [
     image: "/images/fethron.webp",
     url: "fethron.studio",
     tagline: "Digital Monuments.",
-    industry: "Digital Agency",
+    industry: "Digital Studio",
     services: "Branding, Web Design, Development, Motion",
     duration: "Ongoing",
     role: "Strategy, Design, Development",

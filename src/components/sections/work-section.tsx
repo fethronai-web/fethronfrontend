@@ -3,7 +3,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { PROJECTS } from "@/config/site";
+import { PROJECTS, SITE } from "@/config/site";
+import { BrandMark } from "@/components/ui/brand-mark";
+import { SELECT_CASE_EVENT } from "@/lib/select-case";
 
 type Project = (typeof PROJECTS)[number];
 
@@ -287,6 +289,21 @@ function Mockup({ project, tilt }: { project: Project; tilt: boolean }) {
             <span className="ml-3 rounded bg-white/5 px-3 py-1 text-[10px] tracking-wide text-off-white/40">
               {project.url ?? `${project.id}.io`}
             </span>
+            {/* Fethron brand lockup */}
+            <span className="ml-auto flex items-center pr-1" style={{ gap: "8px" }}>
+              <span
+                className="shrink-0"
+                style={{ display: "inline-flex", width: "15px", height: "15px" }}
+              >
+                <BrandMark variant="red" />
+              </span>
+              <span
+                className="font-brand text-[11px] font-semibold uppercase text-off-white/75"
+                style={{ letterSpacing: "0.22em" }}
+              >
+                {SITE.name}
+              </span>
+            </span>
           </div>
           {/* live screenshot — 16:9 to match the captures exactly (no crop) */}
           <div className="relative aspect-video">
@@ -341,6 +358,17 @@ export function WorkSection() {
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Deep-link from elsewhere on the page (e.g. hero "View Case Study").
+  useEffect(() => {
+    const onSelect = (e: Event) => {
+      const id = (e as CustomEvent<{ id: string }>).detail?.id;
+      const idx = PROJECTS.findIndex((p) => p.id === id);
+      if (idx >= 0) setActive(idx);
+    };
+    window.addEventListener(SELECT_CASE_EVENT, onSelect);
+    return () => window.removeEventListener(SELECT_CASE_EVENT, onSelect);
   }, []);
 
   return (
