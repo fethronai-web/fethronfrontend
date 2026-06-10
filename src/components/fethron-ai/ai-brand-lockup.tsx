@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { BrandMark } from "@/components/ui/brand-mark";
-import { FETHRON_AGENT_ROUTE } from "@/config/ai-tools";
+import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 
 const BRAND_MARK_LAYOUT_ID = "fethron-ai-brand-mark";
 const BRAND_WORDMARK_LAYOUT_ID = "fethron-ai-brand-wordmark";
@@ -30,7 +30,7 @@ export function AiBrandMark({
 
   if (link) {
     return (
-      <Link href={FETHRON_AGENT_ROUTE} onClick={onClick} className="shrink-0" aria-label="Fethron AI home">
+      <Link href={FETHRON_AGENT_URL} onClick={onClick} className="shrink-0" aria-label="Fethron AI home">
         {mark}
       </Link>
     );
@@ -39,20 +39,18 @@ export function AiBrandMark({
   return mark;
 }
 
-export function AiBrandWordmark({ variant = "bar" }: { variant?: "bar" | "sidebar" }) {
-  const onBar = variant === "bar";
-
+export function AiBrandWordmark({ variant: _variant = "bar" }: { variant?: "bar" | "sidebar" }) {
+  // The agent's backdrop is now a theme surface (light in day, dark in night) in
+  // BOTH hub and chat, so the wordmark uses readable theme text in every case —
+  // the old cream "bar" colour vanished on the light chat scrim.
   return (
     <motion.span
       layoutId={BRAND_WORDMARK_LAYOUT_ID}
       initial={false}
-      className={`font-brand min-w-0 truncate text-[12px] font-semibold uppercase tracking-[0.2em] sm:text-[13px] ${
-        onBar ? "text-[var(--ai-bar-text)]" : "text-[var(--ai-text)]"
-      }`}
+      className="font-brand min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--ai-text)] sm:text-[13px] sm:tracking-[0.2em]"
       transition={{ type: "spring", stiffness: 380, damping: 32 }}
     >
-      Fethron{" "}
-      <span className={onBar ? "text-[var(--ai-bar-accent)]" : "text-[var(--ai-brown)]"}>AI</span>
+      Fethron <span className="text-[var(--ai-text-muted)]">AI</span>
     </motion.span>
   );
 }
@@ -68,9 +66,10 @@ export function AiBrandLockup({
 }) {
   return (
     <Link
-      href={FETHRON_AGENT_ROUTE}
+      href={FETHRON_AGENT_URL}
       onClick={onClick}
-      className="flex min-w-0 items-center gap-2.5 sm:gap-3"
+      className="flex min-w-0 items-center gap-2 sm:gap-3"
+      aria-label="Fethron AI home"
     >
       <AiBrandMark className={markClassName} />
       <AiBrandWordmark variant={variant} />

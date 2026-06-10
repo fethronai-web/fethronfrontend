@@ -5,8 +5,6 @@ import {
   Check,
   ChevronDown,
   CircleUser,
-  Compass,
-  FileText,
   Image,
   LogIn,
   LogOut,
@@ -15,6 +13,7 @@ import {
   Moon,
   Paperclip,
   Plus,
+  Rocket,
   ShieldCheck,
   Sun,
   type LucideProps,
@@ -23,8 +22,7 @@ import type { AiToolId } from "@/config/ai-tools";
 
 const TOOL_ICONS = {
   "sentinel-audit": ShieldCheck,
-  "roadmap-oracle": Compass,
-  "venture-dossier": FileText,
+  "vision-to-launch": Rocket,
 } as const satisfies Record<AiToolId, ComponentType<LucideProps>>;
 
 export function ToolIcon({

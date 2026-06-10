@@ -15,11 +15,12 @@ import { FETHRON_AI } from "@/config/ai-tools";
  */
 let warmed = false;
 
-export function VideoPreloader() {
+export function VideoPreloader({ isAgentHost = false }: { isAgentHost?: boolean }) {
   const pathname = usePathname();
 
   useEffect(() => {
     if (warmed) return;
+    if (isAgentHost) return;
     if (pathname?.startsWith("/fethron-agent")) return;
 
     const conn = (
@@ -58,7 +59,7 @@ export function VideoPreloader() {
     }
     window.addEventListener("load", schedule, { once: true });
     return () => window.removeEventListener("load", schedule);
-  }, [pathname]);
+  }, [isAgentHost, pathname]);
 
   return null;
 }

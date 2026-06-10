@@ -5,8 +5,8 @@ export const SITE = {
   tagline: "We craft digital experiences that feel inevitable.",
   description:
     "A boutique Studio partnering with ambitious brands on strategy, design, and engineering — from first pixel to production scale.",
-  email: "hello@fethron.studio",
-  url: "https://fethron.studio",
+  email: "hello@fethron.com",
+  url: "https://fethron.com",
 } as const;
 
 export const NAV_LINKS: NavLink[] = [
@@ -15,7 +15,6 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "#about" },
   { label: "Process", href: "#process" },
-  { label: "Insights", href: "#insights" },
 ];
 
 export const SERVICES: Service[] = [
@@ -89,7 +88,7 @@ export const PROJECTS: Project[] = [
     description:
       "Our own digital home — a classical, monument-inspired experience built to endure. Cinematic motion, a bespoke preloader, custom-cut imagery, and meticulous performance across every device, from first pixel to production scale.",
     image: "/images/fethron.webp",
-    url: "fethron.studio",
+    url: "fethron.com",
     tagline: "Digital Monuments.",
     industry: "Digital Studio",
     services: "Branding, Web Design, Development, Motion",

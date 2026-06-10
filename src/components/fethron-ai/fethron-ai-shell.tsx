@@ -1,10 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { FethronDynamicProvider } from "@/components/fethron-ai/dynamic-provider";
 import { AiAuthProvider } from "@/components/fethron-ai/ai-auth-context";
-import { AiLoginModal } from "@/components/fethron-ai/ai-login-modal";
 import { AiSidebarProvider } from "@/components/fethron-ai/ai-sidebar-context";
 import { AiThemeProvider } from "@/components/fethron-ai/ai-theme-context";
+import { SessionBootstrap } from "@/components/fethron-ai/session-bootstrap";
 import type { AiTheme } from "@/config/ai-theme-config";
 
 type FethronAiShellProps = {
@@ -14,13 +15,15 @@ type FethronAiShellProps = {
 
 export function FethronAiShell({ children, initialTheme }: FethronAiShellProps) {
   return (
-    <AiAuthProvider>
-      <AiThemeProvider initialTheme={initialTheme}>
-        <AiSidebarProvider>
-          {children}
-          <AiLoginModal />
-        </AiSidebarProvider>
-      </AiThemeProvider>
-    </AiAuthProvider>
+    <FethronDynamicProvider initialTheme={initialTheme}>
+      <AiAuthProvider>
+        <SessionBootstrap />
+        <AiThemeProvider initialTheme={initialTheme}>
+          <AiSidebarProvider>
+            {children}
+          </AiSidebarProvider>
+        </AiThemeProvider>
+      </AiAuthProvider>
+    </FethronDynamicProvider>
   );
 }

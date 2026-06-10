@@ -1,5 +1,5 @@
 {
-  "name": "aethron",
+  "name": "fethron-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,20 +9,26 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "gsap": "^3.15.0",
+    "@dynamic-labs/ethereum": "4.85.0",
+    "@dynamic-labs/sdk-react-core": "4.85.0",
+    "@trpc/client": "^11.0.0",
+    "@trpc/server": "^11.0.0",
     "lucide-react": "^1.17.0",
     "motion": "^12.40.0",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "superjson": "^2.2.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-orm": "^0.45.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "pino": "^10.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -4,27 +4,37 @@ import { useCallback, useLayoutEffect, useRef, type ComponentProps } from "react
 
 type AiPromptTextareaProps = Omit<ComponentProps<"textarea">, "rows"> & {
   value: string;
+  /** Chat mode: a shorter resting box (the big landing box feels oversized once
+   *  the conversation is open). Grows as the user types, up to the max. */
+  compact?: boolean;
 };
 
-function getPromptHeightBounds() {
-  const minHeight = window.matchMedia("(min-width: 640px)").matches ? 104 : 88;
-  const maxHeight = Math.min(window.innerHeight * 0.52, 520);
+function getPromptHeightBounds(compact: boolean) {
+  const wide = window.matchMedia("(min-width: 640px)").matches;
+  const minHeight = compact ? (wide ? 52 : 46) : wide ? 104 : 88;
+  const maxHeight = Math.min(window.innerHeight * (compact ? 0.4 : 0.52), 520);
   return { minHeight, maxHeight };
 }
 
-export function AiPromptTextarea({ value, className, onChange, ...props }: AiPromptTextareaProps) {
+export function AiPromptTextarea({
+  value,
+  className,
+  onChange,
+  compact = false,
+  ...props
+}: AiPromptTextareaProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   const resize = useCallback(() => {
     const el = ref.current;
     if (!el) return;
-    const { minHeight, maxHeight } = getPromptHeightBounds();
+    const { minHeight, maxHeight } = getPromptHeightBounds(compact);
     el.style.height = `${minHeight}px`;
     const contentHeight = el.scrollHeight;
     const next = Math.min(Math.max(contentHeight, minHeight), maxHeight);
     el.style.height = `${next}px`;
     el.style.overflowY = contentHeight > maxHeight ? "auto" : "hidden";
-  }, []);
+  }, [compact]);
 
   useLayoutEffect(() => {
     resize();

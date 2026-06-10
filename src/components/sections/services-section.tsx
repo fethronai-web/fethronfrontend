@@ -378,12 +378,15 @@ function ServicesDeck() {
     offset: ["start start", "end end"],
   });
   // One smoothed master timeline; everything in the deck derives from it.
+  // Tuned for TRACKPAD smoothness: high damping (no overshoot/rubber-band) + low
+  // mass (minimal lag), so the cards track a continuous/inertial trackpad scroll
+  // tightly instead of stuttering as the spring chases a fast-moving target.
   const activeRaw = useTransform(scrollYProgress, [0, 1], [0, SERVICES.length - 1]);
   const active = useSpring(activeRaw, {
     stiffness: 120,
-    damping: 26,
-    mass: 0.5,
-    restDelta: 0.0005,
+    damping: 40,
+    mass: 0.3,
+    restDelta: 0.001,
   });
 
   const [peek, setPeek] = useState(64);

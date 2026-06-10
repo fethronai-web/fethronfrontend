@@ -5,56 +5,59 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { SITE } from "@/config/site";
+import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { selectService } from "@/lib/select-case";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const PHONE = "+91 93897 29208";
+const PHONE = "+91 93109 55408"; // primary
+const PHONE2 = "+91 93897 29208";
 const EMAIL = "fethronai@gmail.com";
+const WHATSAPP_URL = "https://wa.me/919310955408";
+const DISCORD_URL = "https://discord.gg/pdgBCuT58Y";
 
 // `service` carries the index of the matching card in the Services deck so the
 // link can jump straight to it (see selectService).
 type LinkItem = { label: string; href: string; service?: number };
 
+// Every link points somewhere REAL — service deep-links, on-page sections, or
+// live pages. No dead "#" placeholders.
 const COLUMNS: { heading: string; links: LinkItem[] }[] = [
   {
     heading: "Services",
     links: [
-      { label: "AI", href: "#services", service: 0 },
-      { label: "E-Commerce", href: "#services", service: 1 },
-      { label: "Web Development", href: "#services", service: 2 },
-      { label: "Web 3.0", href: "#services", service: 3 },
-      { label: "Brand & Identity", href: "#services", service: 4 },
-      { label: "Digital Marketing", href: "#services", service: 5 },
+      { label: "AI", href: "/#services", service: 0 },
+      { label: "E-Commerce", href: "/#services", service: 1 },
+      { label: "Web Development", href: "/#services", service: 2 },
+      { label: "Web 3.0", href: "/#services", service: 3 },
+      { label: "Brand & Identity", href: "/#services", service: 4 },
+      { label: "Digital Marketing", href: "/#services", service: 5 },
     ],
   },
   {
-    heading: "Work",
+    heading: "Studio",
     links: [
-      { label: "Featured Projects", href: "#work" },
-      { label: "Case Studies", href: "#work" },
-      { label: "Industries", href: "#work" },
-      { label: "View All Work", href: "#work" },
+      { label: "Featured Work", href: "/#work" },
+      { label: "Services", href: "/#services" },
+      { label: "About", href: "/#about" },
+      { label: "Process", href: "/#process" },
+    ],
+  },
+  {
+    heading: "Get Started",
+    links: [
+      { label: "Pricing", href: "/pricing" },
+      { label: "Write to Us", href: "/submit" },
+      { label: "Fethron AI Agent", href: FETHRON_AGENT_URL },
+      { label: "Contact", href: `mailto:${EMAIL}` },
     ],
   },
   {
     heading: "Company",
     links: [
-      { label: "About Fethron", href: "#about" },
-      { label: "Our Approach", href: "#process" },
-      { label: "Careers", href: "#" },
-      { label: "Journal", href: "#" },
-      { label: "Contact", href: `mailto:${SITE.email}` },
-    ],
-  },
-  {
-    heading: "Resources",
-    links: [
-      { label: "Insights", href: "#" },
-      { label: "Guides", href: "#" },
-      { label: "FAQs", href: "#" },
-      { label: "Tech Stack", href: "#" },
-      { label: "Resource Library", href: "#" },
+      { label: "Links", href: "/welcome" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms & Conditions", href: "/terms" },
     ],
   },
 ];
@@ -65,10 +68,22 @@ const SOCIALS: Social[] = [
   { label: "Instagram", href: "https://www.instagram.com/fethron/", icon: "/icons/instagram.svg" },
   { label: "X", href: "https://x.com/fethronn", icon: "/icons/x.svg" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/fethron-165a20413/", icon: "/icons/linkedin.svg" },
+  { label: "Discord", href: DISCORD_URL, icon: "/icons/discord.svg" },
+  { label: "WhatsApp", href: WHATSAPP_URL, icon: "/icons/whatsapp.svg" },
   { label: "Threads", href: "https://www.threads.com/@fethron", icon: "/icons/threads.svg" },
   { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61590636301168", icon: "/icons/facebook.svg" },
-  { label: "Email", href: "mailto:fethronai@gmail.com", icon: "/icons/gmail.svg" },
+  { label: "Email", href: `mailto:${EMAIL}`, icon: "/icons/gmail.svg" },
 ];
+
+/** Service links deep-link to a specific card on the HOME services deck. On the
+ *  home page we intercept and scroll to that card; from any OTHER page the Link
+ *  navigates to /#services first (so it always works, anywhere). */
+function onServiceClick(e: React.MouseEvent, index: number) {
+  if (typeof window !== "undefined" && window.location.pathname === "/") {
+    e.preventDefault();
+    selectService(index);
+  }
+}
 
 function FooterColumn({ heading, links, rule = true }: { heading: string; links: LinkItem[]; rule?: boolean }) {
   return (
@@ -79,13 +94,13 @@ function FooterColumn({ heading, links, rule = true }: { heading: string; links:
         {links.map((l) => (
           <li key={l.label}>
             {l.service !== undefined ? (
-              <button
-                type="button"
-                onClick={() => selectService(l.service!)}
-                className="cursor-pointer text-left text-sm text-off-white/70 transition-colors hover:text-off-white"
+              <Link
+                href={l.href}
+                onClick={(e) => onServiceClick(e, l.service!)}
+                className="text-left text-sm text-off-white/70 transition-colors hover:text-off-white"
               >
                 {l.label}
-              </button>
+              </Link>
             ) : (
               <Link href={l.href} className="text-sm text-off-white/70 transition-colors hover:text-off-white">
                 {l.label}
@@ -118,14 +133,14 @@ function FramedColumn({ heading, links }: { heading: string; links: LinkItem[] }
         {links.map((l) => (
           <li key={l.label}>
             {l.service !== undefined ? (
-              <button
-                type="button"
-                onClick={() => selectService(l.service!)}
-                className="cursor-pointer leading-none text-off-white/70 transition-colors hover:text-off-white"
+              <Link
+                href={l.href}
+                onClick={(e) => onServiceClick(e, l.service!)}
+                className="leading-none text-off-white/70 transition-colors hover:text-off-white"
                 style={{ fontSize: "clamp(0.62rem,0.9vw,1.05rem)" }}
               >
                 {l.label}
-              </button>
+              </Link>
             ) : (
               <Link
                 href={l.href}
@@ -404,6 +419,9 @@ export function SiteFooter() {
                     </svg>
                     {PHONE}
                   </a>
+                  <a href={`tel:${PHONE2.replace(/[^+\d]/g, "")}`} className="inline-flex items-center transition-colors hover:text-accent">
+                    {PHONE2}
+                  </a>
                 </p>
               </div>
               <div className="text-right">
@@ -415,8 +433,8 @@ export function SiteFooter() {
             {/* legal — kept inside the frame */}
             <p className="flex items-center justify-center gap-4 border-t border-off-white/10 pt-[0.9%] text-[clamp(0.58rem,0.6vw,0.78rem)] uppercase tracking-[0.18em] text-off-white/35">
               <span>© {year} {SITE.name}. All rights reserved.</span>
-              <Link href="#" className="transition-colors hover:text-off-white/60">Privacy Policy</Link>
-              <Link href="#" className="transition-colors hover:text-off-white/60">Terms &amp; Conditions</Link>
+              <Link href="/privacy" className="transition-colors hover:text-off-white/60">Privacy Policy</Link>
+              <Link href="/terms" className="transition-colors hover:text-off-white/60">Terms &amp; Conditions</Link>
             </p>
           </motion.div>
         </div>
@@ -449,8 +467,9 @@ export function SiteFooter() {
             <p className="font-brand text-xl font-semibold uppercase tracking-[0.3em] text-off-white">{SITE.name}</p>
             <p className="mt-1.5 text-[10px] uppercase tracking-[0.35em] text-swirl/45">Digital Studio</p>
             <p className="mt-5 flex flex-col gap-2 text-sm text-off-white/60">
-              <a href={`mailto:${SITE.email}`} className="hover:text-accent">{SITE.email}</a>
+              <a href={`mailto:${EMAIL}`} className="hover:text-accent">{EMAIL}</a>
               <a href={`tel:${PHONE.replace(/[^+\d]/g, "")}`} className="hover:text-accent">{PHONE}</a>
+              <a href={`tel:${PHONE2.replace(/[^+\d]/g, "")}`} className="hover:text-accent">{PHONE2}</a>
             </p>
             <SocialRow className="mt-5 flex-wrap text-xs" />
             <p className="mt-8 text-[11px] uppercase tracking-[0.16em] text-off-white/35">

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { FETHRON_AGENT_ROUTE } from "@/config/ai-tools";
+import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 import { cn } from "@/lib/cn";
 
 interface TryMeButtonProps {
@@ -19,7 +19,7 @@ export function TryMeButton({ className, onClick }: TryMeButtonProps) {
 
   return (
     <Link
-      href={FETHRON_AGENT_ROUTE}
+      href={FETHRON_AGENT_URL}
       target="_blank"
       rel="noopener noreferrer"
       onClick={onClick}

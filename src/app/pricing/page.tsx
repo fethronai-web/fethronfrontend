@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { PricingContent } from "@/components/sections/pricing-content";
+import { SEO, studioPageMeta } from "@/config/seo";
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Transparent engagement tiers — from first launch to bespoke, end-to-end builds. Strategy, design, and engineering, priced to endure.",
-};
+export const metadata: Metadata = studioPageMeta(SEO.pricing);
 
 export default function PricingPage() {
   return (

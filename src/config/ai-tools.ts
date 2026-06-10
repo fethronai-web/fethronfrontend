@@ -1,4 +1,4 @@
-export type AiToolId = "sentinel-audit" | "roadmap-oracle" | "venture-dossier";
+export type AiToolId = "sentinel-audit" | "vision-to-launch";
 
 export interface AiTool {
   id: AiToolId;
@@ -21,6 +21,19 @@ export interface AiModel {
 }
 
 export const FETHRON_AGENT_ROUTE = "/fethron-agent";
+export const FETHRON_AGENT_ORIGIN = "https://aistudio.fethron.com";
+export const FETHRON_AGENT_URL =
+  process.env.NEXT_PUBLIC_FETHRON_AGENT_URL ??
+  (process.env.NODE_ENV === "production" ? FETHRON_AGENT_ORIGIN : FETHRON_AGENT_ROUTE);
+
+/** Keep clean `/c/...` URLs on the agent subdomain while preserving local dev routes. */
+export function getFethronAgentPath(path = ""): string {
+  const suffix = path ? `/${path.replace(/^\/+/, "")}` : "";
+  if (typeof window !== "undefined" && window.location.hostname === "aistudio.fethron.com") {
+    return suffix || "/";
+  }
+  return `${FETHRON_AGENT_ROUTE}${suffix}`;
+}
 
 export const FETHRON_AI = {
   title: "Fethron AI",
@@ -29,7 +42,7 @@ export const FETHRON_AI = {
   route: FETHRON_AGENT_ROUTE,
   videoBg: "/images/Background%20fethron%20ai%20(online-video-cutter.com).mp4",
   videoBgDark: "/images/dark%20background%20fethron%20ai.mp4",
-  docsUrl: `${FETHRON_AGENT_ROUTE}/docs`,
+  docsUrl: `${FETHRON_AGENT_URL}/docs`,
 } as const;
 
 export const AI_MODELS: AiModel[] = [
@@ -53,37 +66,71 @@ export const AI_TOOLS: AiTool[] = [
     chipHint: "Security scan before you ship",
     tagline: "Smart contract security, decoded.",
     description:
-      "Paste your Solidity or deployment address. Sentinel scans for common vulnerabilities, gas risks, and upgrade patterns — a clear report before you ship on-chain.",
+      "Paste your Solidity source or upload your .sol file(s). Sentinel scans for common vulnerabilities, gas risks, and upgrade patterns — a clear report before you ship on-chain.",
     inputPlaceholder:
-      "Paste contract source code or paste your contract address…",
+      "Paste your Solidity source code or upload a .sol file…",
     actionLabel: "Run Audit",
   },
   {
-    id: "roadmap-oracle",
-    name: "Roadmap Oracle",
-    chipLabel: "Know Your Vision",
-    chipHint: "Turn your idea into a roadmap",
-    tagline: "Your idea, mapped to milestones.",
+    id: "vision-to-launch",
+    name: "Vision to Launch",
+    chipLabel: "Vision to Launch",
+    chipHint: "Idea → roadmap, brand & costing",
+    tagline: "Your idea, mapped from vision to launch.",
     description:
-      "Describe what you're building in plain language. The Oracle returns a phased roadmap — MVP scope, dependencies, and what to tackle first.",
+      "Describe your idea in plain language. Vision to Launch returns a complete HTML blueprint — a sharp vision, a phased roadmap, brand-name directions with logo concepts, Fethron pricing, and a viability read. Everything you need to go from idea to launch.",
     inputPlaceholder:
-      "Tell us your idea — product, audience, and what success looks like…",
-    actionLabel: "Generate Roadmap",
-  },
-  {
-    id: "venture-dossier",
-    name: "Venture Dossier",
-    chipLabel: "Launch Brief",
-    chipHint: "Costing, brand names & viability",
-    tagline: "One brief. Costing, brand, viability.",
-    description:
-      "Share your concept once. Venture Dossier assembles a downloadable HTML brief — cost estimates, timeline, feasibility score, and brand name directions.",
-    inputPlaceholder:
-      "Describe your venture — problem, solution, market, and budget range…",
-    actionLabel: "Build Dossier",
+      "Describe your idea — what you're building, who it's for, and what success looks like…",
+    actionLabel: "Build Blueprint",
   },
 ];
 
 export function getAiTool(id: AiToolId): AiTool | undefined {
   return AI_TOOLS.find((t) => t.id === id);
+}
+
+/** Backend tool ids the agent router uses. */
+export type BackendToolKind = "smart-contract-audit" | "know-your-vision";
+
+/**
+ * The composer's tool dropdown. "auto" lets the agent pick the tool from the
+ * prompt; the others force a specific tool (the backend nudges the user if their
+ * prompt doesn't match the forced tool). These ids are sent straight to
+ * `chat.send` as `mode`.
+ */
+export type ToolMode = "auto" | BackendToolKind;
+
+export interface ToolModeOption {
+  id: ToolMode;
+  label: string;
+  hint: string;
+  placeholder: string;
+}
+
+export const TOOL_MODES: ToolModeOption[] = [
+  {
+    id: "auto",
+    label: "Auto",
+    hint: "I'll pick the right tool from your prompt",
+    placeholder:
+      "Describe your idea for a launch blueprint, paste a Solidity contract for a security audit, or just ask us anything about Fethron — I'll take it from here.",
+  },
+  {
+    id: "know-your-vision",
+    label: "Vision to Launch",
+    hint: "Idea → roadmap, brand & costing",
+    placeholder:
+      "Describe your idea — what you're building, who it's for, and the goal. You'll get a vision, phased roadmap, brand directions & costing.",
+  },
+  {
+    id: "smart-contract-audit",
+    label: "Smart Contract Audit",
+    hint: "Security scan before you ship",
+    placeholder:
+      "Paste your Solidity source code or upload a .sol file. You'll get a security report — each finding with its file, severity & fix.",
+  },
+];
+
+export function getToolMode(id: ToolMode): ToolModeOption {
+  return TOOL_MODES.find((m) => m.id === id) ?? TOOL_MODES[0]!;
 }

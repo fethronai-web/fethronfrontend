@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PAGE_INSET_X, PAGE_INSET_TOP } from "@/config/layout";
-import { FETHRON_AGENT_ROUTE } from "@/config/ai-tools";
+import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 import { NAV_LINKS, SITE } from "@/config/site";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/cn";
@@ -27,18 +27,28 @@ export function SiteHeader() {
   const resolveHref = (href: string) =>
     href.startsWith("#") && !isHome ? `/${href}` : href;
 
+  // Re-run on every route change. The header persists across navigations, so a
+  // one-time observer would keep watching a detached #hero after you return to
+  // home from /pricing or /submit — leaving `pastHero` stale (pill stuck on the
+  // hero, or no pill on scroll). Off-home there's no hero → reset to transparent
+  // (the pill there is driven by `isHome` in `onHero`).
   useEffect(() => {
+    if (!isHome) {
+      setPastHero(false);
+      return;
+    }
     const hero = document.getElementById("hero");
-    if (!hero) return;
-
+    if (!hero) {
+      setPastHero(false);
+      return;
+    }
     const observer = new IntersectionObserver(
       ([entry]) => setPastHero(!entry.isIntersecting),
       { threshold: 0, rootMargin: "-80px 0px 0px 0px" },
     );
-
     observer.observe(hero);
     return () => observer.disconnect();
-  }, []);
+  }, [isHome, pathname]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -155,13 +165,18 @@ export function SiteHeader() {
                 key={link.href}
                 href={resolveHref(link.href)}
                 className={cn(
-                  "text-[11px] font-medium uppercase tracking-[0.16em] transition-colors",
+                  "relative text-[11px] font-medium uppercase tracking-[0.16em] transition-colors",
                   onHero
                     ? "text-black/80 hover:text-black"
                     : "text-off-white/55 hover:text-off-white",
                 )}
               >
                 {link.label}
+                {link.href === "/pricing" && (
+                  <span className="discount-badge ml-1.5 inline-flex -translate-y-1.5 items-center rounded-full bg-accent px-1.5 py-[1.5px] text-[7.5px] font-bold leading-none tracking-[0.08em] text-white">
+                    50% OFF
+                  </span>
+                )}
               </Link>
             ))}
           </nav>
@@ -249,13 +264,18 @@ export function SiteHeader() {
                       href={resolveHref(link.href)}
                       onClick={closeMenu}
                       className={cn(
-                        "block rounded-lg px-3 py-2.5 text-sm font-medium uppercase tracking-wider",
+                        "flex items-center rounded-lg px-3 py-2.5 text-sm font-medium uppercase tracking-wider",
                         onHero
                           ? "text-black/70 hover:bg-black/5 hover:text-black"
                           : "text-off-white/70 hover:bg-off-white/5 hover:text-off-white",
                       )}
                     >
                       {link.label}
+                      {link.href === "/pricing" && (
+                        <span className="discount-badge ml-2 inline-flex items-center rounded-full bg-accent px-1.5 py-[1.5px] text-[8px] font-bold leading-none tracking-[0.08em] text-white">
+                          50% OFF
+                        </span>
+                      )}
                     </Link>
                   </motion.div>
                 ))}
@@ -270,7 +290,7 @@ export function SiteHeader() {
                   className="mt-3 flex flex-col items-stretch gap-3 px-3"
                 >
                   <Link
-                    href={FETHRON_AGENT_ROUTE}
+                    href={FETHRON_AGENT_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={closeMenu}

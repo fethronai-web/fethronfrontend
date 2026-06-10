@@ -1,96 +1,101 @@
 "use client";
 
+import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+  useDynamicContext,
+  useIsLoggedIn,
+  type UserProfile,
+} from "@dynamic-labs/sdk-react-core";
 
 export type AiUser = {
+  /** Stable identity — Dynamic user id, falling back to wallet/email. */
   id: string;
+  /** Display label shown in the header (username → social → email → wallet). */
   name: string;
-  email: string;
+  email: string | null;
+  walletAddress: string | null;
 };
 
 type AiAuthContextValue = {
   user: AiUser | null;
   isAuthenticated: boolean;
+  /** True once the Dynamic SDK has hydrated — gates the header until then. */
   isReady: boolean;
-  loginOpen: boolean;
+  /** Opens Dynamic's auth widget (email / social / wallet). */
   openLogin: () => void;
-  closeLogin: () => void;
-  login: (email: string) => void;
   logout: () => void;
 };
 
-const STORAGE_KEY = "fethron-ai-session";
-
 const AiAuthContext = createContext<AiAuthContextValue | null>(null);
 
-function displayNameFromEmail(email: string) {
-  const local = email.split("@")[0]?.trim();
-  if (!local) return "Builder";
-  return local.charAt(0).toUpperCase() + local.slice(1);
+function shortAddress(addr: string) {
+  return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+}
+
+function capitalize(s: string) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+/**
+ * Friendly display name, mirroring how Kameti's WalletWidget falls back: an
+ * explicit username → a connected social handle → the email local-part → a
+ * shortened wallet address → "Builder". (The unique, app-owned username comes
+ * with the backend phase; for now we just surface what Dynamic knows.)
+ */
+function deriveName(user: UserProfile | undefined, walletAddress: string | null): string {
+  if (user?.username) return user.username;
+  if (user?.alias) return user.alias;
+
+  const oauth = user?.verifiedCredentials?.find(
+    (c) => c.format === "oauth" && (c.oauthUsername || c.oauthDisplayName),
+  );
+  if (oauth) return (oauth.oauthUsername || oauth.oauthDisplayName) as string;
+
+  if (user?.firstName) return user.firstName;
+
+  const email =
+    user?.email ?? user?.verifiedCredentials?.find((c) => c.format === "email" && c.email)?.email;
+  if (email) return capitalize(email.split("@")[0] ?? email);
+
+  if (walletAddress) return shortAddress(walletAddress);
+  return "Builder";
 }
 
 export function AiAuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AiUser | null>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
+  const { sdkHasLoaded, primaryWallet, user: dynUser, setShowAuthFlow, handleLogOut } =
+    useDynamicContext();
+  const isLoggedIn = useIsLoggedIn();
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setUser(JSON.parse(raw) as AiUser);
-    } catch {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-    setIsReady(true);
-  }, []);
+  const walletAddress = primaryWallet?.address ?? null;
 
-  useEffect(() => {
-    if (!isReady) return;
-    if (user) localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    else localStorage.removeItem(STORAGE_KEY);
-  }, [user, isReady]);
+  const user = useMemo<AiUser | null>(() => {
+    if (!isLoggedIn) return null;
+    const email =
+      dynUser?.email ??
+      dynUser?.verifiedCredentials?.find((c) => c.format === "email" && c.email)?.email ??
+      null;
+    return {
+      id: dynUser?.userId ?? walletAddress ?? email ?? "user",
+      name: deriveName(dynUser, walletAddress),
+      email,
+      walletAddress,
+    };
+  }, [isLoggedIn, dynUser, walletAddress]);
 
-  const openLogin = useCallback(() => setLoginOpen(true), []);
-  const closeLogin = useCallback(() => setLoginOpen(false), []);
-
-  const login = useCallback(
-    (email: string) => {
-      const trimmed = email.trim().toLowerCase();
-      setUser({
-        id: crypto.randomUUID(),
-        email: trimmed,
-        name: displayNameFromEmail(trimmed),
-      });
-      setLoginOpen(false);
-    },
-    [],
-  );
-
+  const openLogin = useCallback(() => setShowAuthFlow(true), [setShowAuthFlow]);
   const logout = useCallback(() => {
-    setUser(null);
-    setLoginOpen(false);
-  }, []);
+    void handleLogOut();
+  }, [handleLogOut]);
 
-  const value = useMemo(
+  const value = useMemo<AiAuthContextValue>(
     () => ({
       user,
       isAuthenticated: Boolean(user),
-      isReady,
-      loginOpen,
+      isReady: sdkHasLoaded,
       openLogin,
-      closeLogin,
-      login,
       logout,
     }),
-    [user, isReady, loginOpen, openLogin, closeLogin, login, logout],
+    [user, sdkHasLoaded, openLogin, logout],
   );
 
   return <AiAuthContext.Provider value={value}>{children}</AiAuthContext.Provider>;

@@ -60,6 +60,10 @@
   --ai-placeholder: color-mix(in srgb, var(--ai-brown-dark) 72%, var(--ai-olive));
   --ai-border: color-mix(in srgb, var(--ai-brown) 28%, transparent);
   --ai-glass: color-mix(in srgb, var(--ai-surface) 88%, transparent);
+  /* User message bubble — a deep, minimal slate that sits cleanly on the warm
+     cream surface; theme-aware (see dark override). */
+  --ai-user-bg: #38474f;
+  --ai-user-text: #f4f1ea;
   --ai-bar-text: var(--ai-surface);
   --ai-bar-accent: var(--ai-stone);
   --ai-greeting-shadow: rgba(247, 232, 191, 0.9);
@@ -102,8 +106,7 @@
 .fethron-ai-prompt-field,
 .fethron-ai-model-menu,
 .fethron-ai-attach-menu,
-.fethron-ai-user-menu,
-.fethron-ai-login-modal {
+.fethron-ai-user-menu {
   transition:
     background var(--ai-theme-duration) var(--ai-theme-ease),
     background-color var(--ai-theme-duration) var(--ai-theme-ease),
@@ -130,8 +133,7 @@
   .fethron-ai-prompt-field,
   .fethron-ai-model-menu,
   .fethron-ai-attach-menu,
-  .fethron-ai-user-menu,
-  .fethron-ai-login-modal {
+  .fethron-ai-user-menu {
     transition: none !important;
   }
 }
@@ -171,6 +173,9 @@ html[data-fethron-ai-theme="dark"] .fethron-ai,
   --ai-placeholder: color-mix(in srgb, var(--ai-text-muted) 88%, var(--ai-olive));
   --ai-border: color-mix(in srgb, var(--ai-stone) 22%, transparent);
   --ai-glass: color-mix(in srgb, var(--ai-surface) 86%, transparent);
+  /* Slightly lifted slate so the user bubble reads as elevated on the dark bg. */
+  --ai-user-bg: #33444e;
+  --ai-user-text: #eef2f5;
   --ai-bar-text: #edf1f4;
   --ai-bar-accent: #a8b8c4;
   --ai-greeting-shadow: rgba(16, 24, 32, 0.72);
@@ -420,11 +425,14 @@ html[data-fethron-ai-theme="dark"] .fethron-ai,
 }
 
 .fethron-ai-chip[data-active="true"] {
-  background: color-mix(in srgb, var(--ai-surface) 94%, var(--ai-panel-tint));
-  border-color: color-mix(in srgb, var(--ai-primary) 55%, var(--ai-brown));
+  /* teal tint + a full-strength 2px teal ring (border + matching shadow ring)
+     + glow + lift — unmistakably "this one is selected". */
+  background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
+  border-color: var(--ai-primary);
+  transform: translateY(-1px);
   box-shadow:
-    0 12px 28px -12px rgba(54, 134, 137, 0.35),
-    inset 0 0 0 1px color-mix(in srgb, var(--ai-primary) 18%, transparent);
+    0 0 0 1px var(--ai-primary),
+    0 16px 34px -16px rgba(54, 134, 137, 0.5);
 }
 
 .fethron-ai-chip[data-active="true"] .fethron-ai-chip-label {
@@ -436,10 +444,29 @@ html[data-fethron-ai-theme="dark"] .fethron-ai,
   opacity: 1;
 }
 
+/* active icon flips to a solid teal chip with an inverted glyph */
 .fethron-ai-chip[data-active="true"] .fethron-ai-chip-icon {
-  background: color-mix(in srgb, var(--ai-primary) 16%, var(--ai-surface));
-  color: var(--ai-primary);
-  border-color: color-mix(in srgb, var(--ai-primary) 28%, transparent);
+  background: var(--ai-primary);
+  color: var(--ai-surface);
+  border-color: var(--ai-primary);
+  box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--ai-primary) 70%, transparent);
+}
+
+/* selected check badge — hidden until active, then pops in */
+.fethron-ai-chip-check {
+  background: var(--ai-primary);
+  color: var(--ai-surface);
+  opacity: 0;
+  transform: scale(0.4);
+  box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--ai-primary) 70%, transparent);
+  transition:
+    opacity 0.2s ease,
+    transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fethron-ai-chip[data-active="true"] .fethron-ai-chip-check {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .fethron-ai-tool-card {
@@ -564,78 +591,6 @@ html[data-fethron-ai-theme="dark"] .fethron-ai,
   background: color-mix(in srgb, var(--ai-primary) 12%, var(--ai-surface));
 }
 
-.fethron-ai-login-backdrop {
-  background: color-mix(in srgb, var(--ai-bg) 82%, black);
-  backdrop-filter: blur(10px);
-}
-
-.fethron-ai-login-modal {
-  background: var(--ai-surface);
-  border: 1px solid color-mix(in srgb, var(--ai-brown) 35%, transparent);
-  box-shadow:
-    0 28px 70px -28px rgba(42, 27, 18, 0.75),
-    inset 0 1px 0 var(--ai-inset-shine);
-  color: var(--ai-text);
-}
-
-.fethron-ai-login-close {
-  color: var(--ai-brown-dark);
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.fethron-ai-login-close:hover {
-  background: color-mix(in srgb, var(--ai-brown) 10%, var(--ai-surface));
-  color: var(--ai-text);
-}
-
-.fethron-ai-login-icon {
-  color: var(--ai-primary);
-  background: color-mix(in srgb, var(--ai-primary) 14%, var(--ai-surface));
-}
-
-.fethron-ai-login-title {
-  color: var(--ai-text);
-}
-
-.fethron-ai-login-subtitle {
-  color: var(--ai-text-muted);
-}
-
-.fethron-ai-login-label {
-  color: var(--ai-brown-dark);
-}
-
-.fethron-ai-login-input {
-  color: var(--ai-text);
-  background: color-mix(in srgb, var(--ai-brown) 6%, var(--ai-panel-tint));
-  border: 1px solid color-mix(in srgb, var(--ai-brown) 24%, transparent);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.fethron-ai-login-input::placeholder {
-  color: var(--ai-brown-dark);
-  opacity: 0.55;
-}
-
-.fethron-ai-login-input:focus,
-.fethron-ai-login-input:focus-visible {
-  outline: none;
-  border-color: color-mix(in srgb, var(--ai-primary) 55%, var(--ai-border));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-primary) 18%, transparent);
-}
-
-.fethron-ai-login-submit {
-  color: var(--ai-surface);
-  background: var(--ai-primary);
-  box-shadow: 0 6px 20px -6px rgba(54, 134, 137, 0.55);
-  transition: filter 0.2s ease, transform 0.2s ease;
-}
-
-.fethron-ai-login-submit:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-}
-
 /* Sidebar — glass panel, pushes main content */
 .fethron-ai-sidebar {
   --ai-sidebar-width: 15.5rem;
@@ -715,8 +670,9 @@ html[data-fethron-ai-theme="dark"] .fethron-ai-sidebar,
 
 .fethron-ai-sidebar-item[data-active="true"] {
   color: var(--ai-primary);
-  background: color-mix(in srgb, var(--ai-primary) 10%, var(--ai-surface));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ai-primary) 22%, transparent);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--ai-primary) 16%, var(--ai-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ai-primary) 32%, transparent);
 }
 
 .fethron-ai-sidebar-item-muted {
@@ -761,4 +717,225 @@ html[data-fethron-ai-theme="dark"] .fethron-ai-sidebar,
   .fethron-ai-sidebar {
     --ai-sidebar-width: 14rem;
   }
+}
+
+/* ------------------------------------------------------------------ *
+ * Dynamic (dynamic.xyz) auth widget — themed to the agent's day / night
+ * palette. Scoped by the page theme attribute so it tracks the toggle,
+ * and at specificity 0,2,1 it beats Dynamic's own 0,2,0 theme rules.
+ * Lives in this static, bundled stylesheet (not runtime cssOverrides) so
+ * the colours are in place the instant the widget mounts — no flash of
+ * Dynamic's default skin, no glitch when toggling day↔night.
+ * `.dynamic-shadow-dom` is a normal DOM node (not a real shadow root).
+ * ------------------------------------------------------------------ */
+.dynamic-shadow-dom {
+  --dynamic-border-radius: 14px;
+  --dynamic-font-family-primary: var(--font-sans), system-ui, sans-serif;
+  --dynamic-modal-backdrop-filter: blur(6px);
+}
+
+/* Day (light) — default, and whenever the attribute isn't "dark" */
+html:not([data-fethron-ai-theme="dark"]) .dynamic-shadow-dom {
+  --dynamic-base-1: #efe1bd;
+  --dynamic-base-2: #f7e8bf;
+  --dynamic-base-3: #ecdaae;
+  --dynamic-base-4: #e2cd9c;
+  --dynamic-background-color: #f7e8bf;
+  --dynamic-text-primary: #2a1b12;
+  --dynamic-text-primary-color: #2a1b12;
+  --dynamic-text-secondary: #6c5036;
+  --dynamic-text-secondary-color: #6c5036;
+  --dynamic-text-tertiary: #8a7350;
+  --dynamic-text-link: #368689;
+  --dynamic-brand-primary-color: #368689;
+  --dynamic-brand-hover-color: #2c6f72;
+  --dynamic-brand-secondary-color: #4f9a9c;
+  --dynamic-button-primary-background: #368689;
+  --dynamic-button-primary-hover: #2c6f72;
+  --dynamic-connect-button-background: #f7e8bf;
+  --dynamic-connect-button-background-hover: #ecdaae;
+  --dynamic-connect-button-color: #2a1b12;
+  --dynamic-connect-button-border: 1px solid rgba(108, 80, 54, 0.28);
+  --dynamic-border-color: rgba(108, 80, 54, 0.28);
+  --dynamic-border-1: rgba(108, 80, 54, 0.28);
+  --dynamic-border-2: rgba(108, 80, 54, 0.2);
+  --dynamic-border: rgba(108, 80, 54, 0.28);
+  --dynamic-hover: rgba(54, 134, 137, 0.1);
+  --dynamic-search-bar-background: #fcf4de;
+  --dynamic-search-bar-background-hover: #fcf4de;
+  --dynamic-search-bar-background-focus: #fffaf0;
+  --dynamic-search-bar-border: rgba(108, 80, 54, 0.28);
+  --dynamic-search-bar-border-hover: #368689;
+  --dynamic-search-bar-border-focus: #368689;
+  --dynamic-wallet-list-tile-background: #f1e3ba;
+  --dynamic-wallet-list-tile-background-hover: #ecdaae;
+  --dynamic-wallet-list-tile-border: 1px solid rgba(108, 80, 54, 0.22);
+  --dynamic-wallet-list-tile-border-hover: rgba(54, 134, 137, 0.45);
+  --dynamic-modal-border: 1px solid rgba(108, 80, 54, 0.28);
+  --dynamic-modal-backdrop-background: rgba(31, 22, 15, 0.5);
+  --dynamic-overlay: rgba(31, 22, 15, 0.5);
+  --dynamic-footer-background: #efe1bd;
+  --dynamic-footer-text-color: #6c5036;
+  --dynamic-footer-icon-color: #6c5036;
+  --dynamic-badge-background: #ecdaae;
+  --dynamic-badge-color: #2a1b12;
+}
+
+/* Night (dark) */
+html[data-fethron-ai-theme="dark"] .dynamic-shadow-dom {
+  --dynamic-base-1: #101820;
+  --dynamic-base-2: #24303c;
+  --dynamic-base-3: #2b3845;
+  --dynamic-base-4: #334049;
+  --dynamic-background-color: #101820;
+  --dynamic-text-primary: #edf1f4;
+  --dynamic-text-primary-color: #edf1f4;
+  --dynamic-text-secondary: #a4b4bf;
+  --dynamic-text-secondary-color: #a4b4bf;
+  --dynamic-text-tertiary: #7e909c;
+  --dynamic-text-link: #5eb8bb;
+  --dynamic-brand-primary-color: #5eb8bb;
+  --dynamic-brand-hover-color: #76c5c8;
+  --dynamic-brand-secondary-color: #4f9a9c;
+  --dynamic-button-primary-background: #5eb8bb;
+  --dynamic-button-primary-hover: #76c5c8;
+  --dynamic-connect-button-background: #24303c;
+  --dynamic-connect-button-background-hover: #2b3845;
+  --dynamic-connect-button-color: #edf1f4;
+  --dynamic-connect-button-border: 1px solid rgba(143, 163, 176, 0.22);
+  --dynamic-border-color: rgba(143, 163, 176, 0.22);
+  --dynamic-border-1: rgba(143, 163, 176, 0.22);
+  --dynamic-border-2: rgba(143, 163, 176, 0.16);
+  --dynamic-border: rgba(143, 163, 176, 0.22);
+  --dynamic-hover: rgba(94, 184, 187, 0.12);
+  --dynamic-search-bar-background: #1b2630;
+  --dynamic-search-bar-background-hover: #1b2630;
+  --dynamic-search-bar-background-focus: #1f2a34;
+  --dynamic-search-bar-border: rgba(143, 163, 176, 0.22);
+  --dynamic-search-bar-border-hover: #5eb8bb;
+  --dynamic-search-bar-border-focus: #5eb8bb;
+  --dynamic-wallet-list-tile-background: #1f2a34;
+  --dynamic-wallet-list-tile-background-hover: #2b3845;
+  --dynamic-wallet-list-tile-border: 1px solid rgba(143, 163, 176, 0.18);
+  --dynamic-wallet-list-tile-border-hover: rgba(94, 184, 187, 0.5);
+  --dynamic-modal-border: 1px solid rgba(143, 163, 176, 0.22);
+  --dynamic-modal-backdrop-background: rgba(8, 12, 16, 0.62);
+  --dynamic-overlay: rgba(8, 12, 16, 0.62);
+  --dynamic-footer-background: #101820;
+  --dynamic-footer-text-color: #a4b4bf;
+  --dynamic-footer-icon-color: #a4b4bf;
+  --dynamic-badge-background: #2b3845;
+  --dynamic-badge-color: #edf1f4;
+}
+
+/* pill-shaped primary buttons to match the rest of the agent UI */
+.dynamic-shadow-dom .button--padding-large {
+  border-radius: 9999px;
+}
+
+/* The chat transcript must be freely selectable / copyable, with a visible,
+   on-theme highlight (the global ::selection uses site vars that wash out here). */
+.fethron-ai-transcript,
+.fethron-ai-transcript * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Room for the chat-mode dock on narrow viewports (right-centre placement). */
+@media (max-width: 1023px) {
+  .fethron-ai[data-chat="true"] .fethron-ai-transcript {
+    padding-right: 3.25rem;
+  }
+}
+.fethron-ai ::selection {
+  background: color-mix(in srgb, var(--ai-primary) 60%, var(--ai-surface));
+  color: var(--ai-text);
+}
+.fethron-ai[data-theme="dark"] ::selection {
+  background: color-mix(in srgb, var(--ai-primary) 70%, transparent);
+  color: #ffffff;
+}
+
+/* "Thinking" typing dots shown on the assistant side while the agent decides. */
+@keyframes fethron-ai-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.fethron-ai-typing-dot {
+  animation: fethron-ai-typing 1.1s ease-in-out infinite;
+}
+.fethron-ai-typing-dot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.fethron-ai-typing-dot:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+/* Indeterminate top progress bar while a chat loads in place. */
+@keyframes fethron-ai-loadbar {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(420%);
+  }
+}
+.fethron-ai-loadbar {
+  border-radius: 9999px;
+  animation: fethron-ai-loadbar 0.9s ease-in-out infinite;
+}
+
+/* Chat-mode background: a themed scrim laid over the scenery — a soft top glow,
+   a gentle vertical gradient, and a faint grain. Kept a touch translucent so a
+   whisper of the scene shows through. Fully theme-aware via the surface vars. */
+.fethron-ai-chat-bg {
+  position: absolute;
+  inset: 0;
+  /* Sit ABOVE the scenery video (z1) and its overlay (z2) in the shared stacking
+     context — otherwise the scrim paints under the video and the scene shows. */
+  z-index: 3;
+  background:
+    /* warm stone glow, top-left */
+    radial-gradient(
+      90% 70% at 12% 4%,
+      color-mix(in srgb, var(--ai-stone) 30%, transparent) 0%,
+      transparent 52%
+    ),
+    /* soft teal breath, bottom-right */
+    radial-gradient(
+      85% 70% at 90% 96%,
+      color-mix(in srgb, var(--ai-primary) 12%, transparent) 0%,
+      transparent 55%
+    ),
+    /* bright highlight, top-center */
+    radial-gradient(
+      130% 90% at 50% -14%,
+      color-mix(in srgb, var(--ai-surface) 65%, transparent) 0%,
+      transparent 58%
+    ),
+    /* diagonal base: cream → muted → a touch browner at the foot */
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--ai-surface) 96%, transparent) 0%,
+      color-mix(in srgb, var(--ai-surface-muted) 97%, transparent) 46%,
+      color-mix(in srgb, var(--ai-brown) 10%, var(--ai-surface-muted)) 100%
+    );
+  transition: background var(--ai-theme-duration) var(--ai-theme-ease);
+}
+
+.fethron-ai-chat-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  mix-blend-mode: soft-light;
 }

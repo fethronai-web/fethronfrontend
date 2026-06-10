@@ -4,12 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { SITE } from "@/config/site";
+import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const MAILTO = `mailto:${SITE.email}`;
-// TODO: point this at the real estimator/tool when it's built.
-const TOOL_HREF = "#estimate";
+// "Let's build something enduring" opens the letter (Write to Us) page.
+const LETTER_HREF = "/submit";
+// "Don't know? Try our tool" opens the Fethron AI agent.
+const TOOL_HREF = FETHRON_AGENT_URL;
 
 // Subtle film-grain texture for the cards.
 const NOISE =
@@ -86,6 +87,17 @@ const PLANS: Plan[] = [
       { name: "Essential", price: "₹40,000", unit: "one-time", features: ["Up to 5 pages, hand-crafted (no templates)", "Built on modern Next.js / React", "Mobile-first & fully responsive", "On-page SEO foundation built in", "Contact form + WhatsApp button", "Fast loading & Google-friendly", "Connected to your domain & hosting", "2 weeks of post-launch support"] },
       { name: "Standard", price: "₹90,000", unit: "one-time", popular: true, features: ["Multi-page website or web app", "Easy-to-edit CMS — update it yourself", "Cinematic scroll & hover animations", "Speed & Core Web Vitals optimised", "Blog / portfolio / careers modules", "Analytics + full SEO setup", "Lead forms & third-party integrations", "30 days of support"] },
       { name: "Premium", price: "₹2,50,000", unit: "one-time", features: ["Complex, fully custom web application", "User auth, dashboards & admin panels", "Third-party & payment API integrations", "Automated testing & error monitoring", "Scalable, maintainable architecture", "Role-based access & security", "CI/CD & smooth deployment", "60-day priority support"] },
+      CONTACT,
+    ],
+  },
+  {
+    key: "mobile-dev",
+    name: "Mobile Development",
+    blurb: "Native-quality Android & iOS apps, designed and shipped to the stores.",
+    tiers: [
+      { name: "Essential", price: "₹60,000", unit: "one-time", features: ["Cross-platform app — Android & iOS", "Up to 5 core screens, hand-crafted", "Clean, native-feeling UI & navigation", "Connects to one API or backend", "Push notifications setup", "Play Store / App Store submission help", "Built on modern React Native / Flutter", "2 weeks of post-launch support"] },
+      { name: "Standard", price: "₹1,50,000", unit: "one-time", popular: true, features: ["Full Android + iOS app, both stores", "User auth, profiles & onboarding", "Offline support & local storage", "Payments / subscriptions integration", "Push notifications & deep links", "Analytics & crash reporting", "Backend / API integration", "30 days of support"] },
+      { name: "Premium", price: "₹4,00,000", unit: "one-time", features: ["Complex, fully custom native app", "Real-time features (chat, live data)", "Maps, media, camera & device APIs", "Admin panel + scalable backend", "In-app purchases & monetisation", "Automated testing & CI/CD pipelines", "Store optimisation & launch support", "60-day priority support"] },
       CONTACT,
     ],
   },
@@ -234,7 +246,7 @@ function TierCard({ tier }: { tier: Tier }) {
         </ul>
 
         <Link
-          href={MAILTO}
+          href="/submit"
           className={
             "mt-6 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.18em] transition-colors " +
             (tier.popular
@@ -324,10 +336,32 @@ export function PricingContent() {
 
             <Link
               href={TOOL_HREF}
-              className="inline-flex items-center gap-2 rounded-full border border-dashed border-accent/45 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-accent/90 transition-colors hover:border-accent hover:text-accent"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Not sure which to pick? Try our tool"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-accent-foreground shadow-[0_8px_26px_-10px_rgba(239,6,6,0.85)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              style={{ background: "linear-gradient(120deg, #ef0606 0%, #b00808 55%, #7a0606 100%)" }}
             >
-              <WandIcon />
-              Don&apos;t know? Try our tool
+              {/* light shimmer sweep across the pill */}
+              {!reduce && (
+                <motion.span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 w-1/2"
+                  style={{ background: "linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)" }}
+                  initial={{ x: "-160%" }}
+                  animate={{ x: "260%" }}
+                  transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 2.4, ease: "easeInOut" }}
+                />
+              )}
+              <motion.span
+                aria-hidden="true"
+                className="relative"
+                animate={reduce ? undefined : { rotate: [0, -14, 12, 0] }}
+                transition={{ duration: 1.3, repeat: Infinity, repeatDelay: 2.4, ease: "easeInOut" }}
+              >
+                <WandIcon />
+              </motion.span>
+              <span className="relative">Don&apos;t know? Try our tool</span>
             </Link>
           </div>
         </motion.div>
@@ -385,7 +419,7 @@ export function PricingContent() {
             around it — no pressure, no jargon.
           </p>
           <Link
-            href={MAILTO}
+            href={LETTER_HREF}
             className="mt-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.22em] text-accent transition-opacity hover:opacity-80"
           >
             Let&apos;s build something enduring

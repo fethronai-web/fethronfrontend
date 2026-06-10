@@ -36,43 +36,44 @@ export function AiAuthBar() {
   useClickOutside(ref, () => setOpen(false), open);
 
   return (
-    <header className="relative z-20 flex shrink-0 items-center justify-between gap-4 px-5 py-4 sm:px-8 sm:py-5">
-      <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+    <header className="relative z-20 flex shrink-0 items-center justify-between gap-2 px-4 py-2.5 sm:gap-4 sm:px-8 sm:py-5">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
         {!sidebarOpen && (
           <>
             <button
               type="button"
               onClick={toggleSidebar}
               aria-label="Open sidebar"
-              className="fethron-ai-sidebar-open-btn inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+              className="fethron-ai-sidebar-open-btn inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg sm:h-9 sm:w-9"
             >
               <SidebarToggleIcon size={18} aria-hidden />
             </button>
-            <AiBrandLockup variant="bar" />
+            <AiBrandLockup variant="bar" markClassName="h-7 w-7 sm:h-9 sm:w-9" />
           </>
         )}
       </div>
 
-      <div className="ml-auto flex items-center gap-2 sm:gap-2.5">
+      <div className="ml-auto flex items-center gap-1.5 sm:gap-2.5">
       <AiThemeToggle />
       {!isReady ? (
-        <div className="h-9 w-[5.5rem] shrink-0 rounded-full opacity-0" aria-hidden />
+        <div className="h-8 w-8 shrink-0 rounded-full opacity-0 sm:h-9 sm:w-[5.5rem]" aria-hidden />
       ) : isAuthenticated ? (
         <div ref={ref} className="relative">
           <button
             type="button"
             aria-expanded={open}
             aria-haspopup="menu"
+            aria-label={user!.name}
             onClick={() => setOpen((v) => !v)}
-            className="fethron-ai-user-trigger inline-flex max-w-[14rem] items-center gap-2 rounded-full py-1.5 pl-1.5 pr-2.5 sm:max-w-[16rem] sm:pr-3"
+            className="fethron-ai-user-trigger inline-flex items-center gap-2 rounded-full p-0 sm:max-w-[16rem] sm:py-1.5 sm:pl-1.5 sm:pr-3"
           >
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--ai-primary)_22%,var(--ai-surface))] text-[var(--ai-primary)]">
               <span className="text-[12px] font-bold uppercase">{user!.name.charAt(0)}</span>
             </span>
-            <span className="min-w-0 truncate text-[12px] font-semibold sm:text-[13px]">{user!.name}</span>
+            <span className="hidden min-w-0 truncate text-[13px] font-semibold sm:block">{user!.name}</span>
             <ChevronDownIcon
               size={14}
-              className={`shrink-0 opacity-70 transition-transform ${open ? "rotate-180" : ""}`}
+              className={`hidden shrink-0 opacity-70 transition-transform sm:block ${open ? "rotate-180" : ""}`}
               aria-hidden
             />
           </button>
@@ -116,10 +117,11 @@ export function AiAuthBar() {
         <button
           type="button"
           onClick={openLogin}
-          className="fethron-ai-header-login inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] sm:text-[12px]"
+          aria-label="Log in"
+          className="fethron-ai-header-login inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-2 sm:text-[12px] sm:font-semibold sm:uppercase sm:tracking-[0.14em]"
         >
           <LogInIcon size={15} aria-hidden />
-          Login
+          <span className="hidden sm:inline">Login</span>
         </button>
       )}
       </div>
