@@ -543,7 +543,11 @@ export function AiToolsHub({
     setInput("");
     setAttachments([]);
     setAttachNote(null);
-    openSidebar();
+    // Reveal the chat sidebar on DESKTOP only. On mobile it's an overlay drawer —
+    // auto-opening it on every send would cover the conversation each time.
+    if (typeof window === "undefined" || window.matchMedia("(min-width: 1024px)").matches) {
+      openSidebar();
+    }
     // Show the user's turn AND an assistant "thinking" placeholder immediately, so
     // there's feedback on the assistant side while the router decides (~1-2s).
     const userId = uiId();

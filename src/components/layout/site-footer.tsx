@@ -65,12 +65,12 @@ const COLUMNS: { heading: string; links: LinkItem[] }[] = [
 type Social = { label: string; href: string; icon: string };
 
 const SOCIALS: Social[] = [
-  { label: "Instagram", href: "https://www.instagram.com/fethron/", icon: "/icons/instagram.svg" },
+  { label: "Instagram", href: "https://www.instagram.com/fethronai", icon: "/icons/instagram.svg" },
   { label: "X", href: "https://x.com/fethronn", icon: "/icons/x.svg" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/fethron-165a20413/", icon: "/icons/linkedin.svg" },
   { label: "Discord", href: DISCORD_URL, icon: "/icons/discord.svg" },
   { label: "WhatsApp", href: WHATSAPP_URL, icon: "/icons/whatsapp.svg" },
-  { label: "Threads", href: "https://www.threads.com/@fethron", icon: "/icons/threads.svg" },
+  { label: "Threads", href: "https://www.threads.com/@fethronai", icon: "/icons/threads.svg" },
   { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61590636301168", icon: "/icons/facebook.svg" },
   { label: "Email", href: `mailto:${EMAIL}`, icon: "/icons/gmail.svg" },
 ];

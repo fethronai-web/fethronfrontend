@@ -5,10 +5,10 @@
 export const SOCIAL = {
   whatsapp: "https://wa.me/919310955408",
   discord: "https://discord.gg/pdgBCuT58Y",
-  instagram: "https://www.instagram.com/fethron/",
+  instagram: "https://www.instagram.com/fethronai",
   x: "https://x.com/fethronn",
   linkedin: "https://www.linkedin.com/in/fethron-165a20413/",
-  threads: "https://www.threads.com/@fethron",
+  threads: "https://www.threads.com/@fethronai",
   facebook: "https://www.facebook.com/profile.php?id=61590636301168",
   email: "fethronai@gmail.com",
   phone: "+91 93109 55408", // primary — all contact/WhatsApp redirects here
