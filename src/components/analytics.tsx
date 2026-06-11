@@ -6,13 +6,13 @@ import Script from "next/script";
  *
  * - Microsoft Clarity: heatmaps + session recordings (where people click / scroll /
  *   drop off). Project id is public by design (it only writes events).
- * - Google Analytics 4: traffic, top pages, sources, engagement time. Set
- *   NEXT_PUBLIC_GA_ID in Vercel to enable it (left off until the id exists).
+ * - Google Analytics 4: traffic, top pages, sources, engagement time.
  *
- * Only runs in production, so local dev + noise never pollutes the data.
+ * Both ids are public by design (client-side tags). Only runs in production, so
+ * local dev never pollutes the data.
  */
 const CLARITY_ID = "x592ymmglg";
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID = "G-40FR8VGM8Z";
 
 export function Analytics() {
   if (process.env.NODE_ENV !== "production") return null;
