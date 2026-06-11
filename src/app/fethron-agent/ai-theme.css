@@ -939,3 +939,24 @@ html[data-fethron-ai-theme="dark"] .dynamic-shadow-dom {
   opacity: 0.03;
   mix-blend-mode: soft-light;
 }
+
+/* Pulsing ring on the tool dropdown when a tool button below the composer is
+   clicked — directs the user to make their selection here. */
+@keyframes fethron-tool-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ai-primary) 50%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--ai-primary) 0%, transparent);
+  }
+}
+.fethron-ai-tool-pulse {
+  animation: fethron-tool-pulse 0.9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fethron-ai-tool-pulse {
+    animation: none;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ai-primary) 45%, transparent);
+  }
+}

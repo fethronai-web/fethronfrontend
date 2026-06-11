@@ -134,3 +134,28 @@ export const TOOL_MODES: ToolModeOption[] = [
 export function getToolMode(id: ToolMode): ToolModeOption {
   return TOOL_MODES.find((m) => m.id === id) ?? TOOL_MODES[0]!;
 }
+
+/**
+ * The tool library shown as buttons under the composer on the agent home. Two are
+ * live today; the rest ship soon and render with a "Soon" badge (not clickable).
+ * Clicking a LIVE tool button doesn't force a tool — it just nudges the user to the
+ * composer's tool dropdown, which is where the actual selection happens.
+ */
+export type ToolShowcaseIcon = "rocket" | "shield" | "resume" | "architect" | "legal";
+
+export interface ToolShowcaseItem {
+  id: string;
+  label: string;
+  hint: string;
+  icon: ToolShowcaseIcon;
+  /** false → future tool: shown with a "Soon" badge, not clickable. */
+  available: boolean;
+}
+
+export const TOOL_SHOWCASE: ToolShowcaseItem[] = [
+  { id: "vision-to-launch", label: "Vision to Launch", hint: "Idea → roadmap, brand & costing", icon: "rocket", available: true },
+  { id: "smart-contract-audit", label: "Smart Contract Audit", hint: "Security scan before you ship", icon: "shield", available: true },
+  { id: "resume-ats", label: "Resume + ATS Score", hint: "Parse & score against ATS", icon: "resume", available: false },
+  { id: "project-architect", label: "Project Architect", hint: "Structure, theme & palette", icon: "architect", available: false },
+  { id: "legal-agent", label: "Legal Agent", hint: "Digital-build legal guidance", icon: "legal", available: false },
+];

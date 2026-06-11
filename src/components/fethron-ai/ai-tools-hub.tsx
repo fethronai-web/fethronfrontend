@@ -2,15 +2,25 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
-import { Rocket, ShieldCheck, Sparkles, type LucideProps } from "lucide-react";
+import {
+  FileText,
+  LayoutGrid,
+  Rocket,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  type LucideProps,
+} from "lucide-react";
 import {
   AI_MODELS,
   FETHRON_AI,
   TOOL_MODES,
+  TOOL_SHOWCASE,
   getFethronAgentPath,
   getToolMode,
   type AiModelId,
   type ToolMode,
+  type ToolShowcaseIcon,
 } from "@/config/ai-tools";
 import { AiAuthBar } from "@/components/fethron-ai/ai-auth-bar";
 import { AiSidebar } from "@/components/fethron-ai/ai-sidebar";
@@ -37,6 +47,56 @@ const TOOL_MODE_ICON: Record<ToolMode, (p: LucideProps) => React.ReactElement> =
   "know-your-vision": (p) => <Rocket {...p} />,
   "smart-contract-audit": (p) => <ShieldCheck {...p} />,
 };
+
+const TOOL_SHOWCASE_ICON: Record<ToolShowcaseIcon, (p: LucideProps) => React.ReactElement> = {
+  rocket: (p) => <Rocket {...p} />,
+  shield: (p) => <ShieldCheck {...p} />,
+  resume: (p) => <FileText {...p} />,
+  architect: (p) => <LayoutGrid {...p} />,
+  legal: (p) => <Scale {...p} />,
+};
+
+/**
+ * Tool library under the composer (home only). Live tools nudge the user to the
+ * composer's tool dropdown via `onPick` (they don't force a selection); future
+ * tools render disabled with a "Soon" badge.
+ */
+function ToolShowcase({ onPick }: { onPick: () => void }) {
+  return (
+    <div className="mt-5 flex w-full max-w-3xl flex-wrap items-stretch justify-center gap-2.5 sm:mt-6 sm:max-w-4xl">
+      {TOOL_SHOWCASE.map((t) => {
+        const Icon = TOOL_SHOWCASE_ICON[t.icon];
+        return (
+          <button
+            key={t.id}
+            type="button"
+            disabled={!t.available}
+            onClick={t.available ? onPick : undefined}
+            aria-label={t.available ? `${t.label} — choose it from the tool menu` : `${t.label} — coming soon`}
+            className={`group relative flex min-w-[8.5rem] flex-1 basis-[8.5rem] flex-col gap-1 rounded-2xl border px-3.5 py-2.5 text-left transition ${
+              t.available
+                ? "cursor-pointer border-[var(--ai-border)] bg-[var(--ai-glass)] hover:border-[var(--ai-primary)] hover:bg-[color-mix(in_srgb,var(--ai-primary)_8%,transparent)]"
+                : "cursor-not-allowed border-dashed border-[var(--ai-border)] opacity-55"
+            }`}
+          >
+            <span className="flex w-full items-center justify-between gap-2">
+              <span className="flex items-center gap-1.5">
+                <Icon className="h-3.5 w-3.5 text-[var(--ai-primary)]" strokeWidth={2} />
+                <span className="text-[13px] font-semibold text-[var(--ai-text)]">{t.label}</span>
+              </span>
+              {!t.available && (
+                <span className="rounded-full bg-[color-mix(in_srgb,var(--ai-primary)_15%,transparent)] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[var(--ai-primary)]">
+                  Soon
+                </span>
+              )}
+            </span>
+            <span className="text-[11px] leading-snug text-[var(--ai-text-muted)]">{t.hint}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function useGreeting() {
   return useMemo(() => {
@@ -366,6 +426,16 @@ export function AiToolsHub({
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [attachNote, setAttachNote] = useState<string | null>(null);
+  // Brief "select a tool" nudge toward the composer's tool dropdown, fired when a
+  // tool button below the composer is clicked (the button itself never selects).
+  const [toolHint, setToolHint] = useState(false);
+  const toolHintTimer = useRef<number | null>(null);
+  const flashToolHint = useCallback(() => {
+    setToolHint(true);
+    if (toolHintTimer.current) window.clearTimeout(toolHintTimer.current);
+    toolHintTimer.current = window.setTimeout(() => setToolHint(false), 4500);
+  }, []);
+  useEffect(() => () => { if (toolHintTimer.current) window.clearTimeout(toolHintTimer.current); }, []);
   const hasText = input.trim().length > 0;
   const canSend = hasText || attachments.length > 0;
   const isChat = messages.length > 0;
@@ -713,13 +783,32 @@ export function AiToolsHub({
         <AttachMenu openUp={isChat} onAdd={addFiles} />
 
         <div className="ml-auto flex items-center gap-2 sm:gap-2.5">
-          {/* Tool dropdown — locked while a run is in flight. */}
-          <ToolModePicker
-            activeId={toolMode}
-            onSelect={setToolMode}
-            disabled={runActive || isSending}
-            openUp={isChat}
-          />
+          <AnimatePresence>
+            {toolHint && (
+              <motion.span
+                key="tool-hint"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 8 }}
+                className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-[var(--ai-primary)]"
+              >
+                Select a tool
+                <motion.span aria-hidden="true" animate={{ x: [0, 5, 0] }} transition={{ duration: 0.9, repeat: Infinity }}>
+                  →
+                </motion.span>
+              </motion.span>
+            )}
+          </AnimatePresence>
+          {/* Tool dropdown — locked while a run is in flight. The buttons below the
+              composer point the user here instead of forcing a selection. */}
+          <span className={`inline-flex rounded-full ${toolHint ? "fethron-ai-tool-pulse" : ""}`}>
+            <ToolModePicker
+              activeId={toolMode}
+              onSelect={setToolMode}
+              disabled={runActive || isSending}
+              openUp={isChat}
+            />
+          </span>
           <ModelPicker activeId={modelId} onSelect={setModelId} openUp={isChat} />
           <ActionButton
             state={runActive ? "running" : isSending ? "sending" : "idle"}
@@ -790,6 +879,7 @@ export function AiToolsHub({
                     </div>
 
                     <div className="w-full max-w-3xl sm:max-w-4xl">{composer}</div>
+                    <ToolShowcase onPick={flashToolHint} />
                   </div>
                 </div>
               )}
