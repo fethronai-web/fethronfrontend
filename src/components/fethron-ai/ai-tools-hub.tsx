@@ -63,7 +63,7 @@ const TOOL_SHOWCASE_ICON: Record<ToolShowcaseIcon, (p: LucideProps) => React.Rea
  */
 function ToolShowcase({ onPick }: { onPick: () => void }) {
   return (
-    <div className="mt-5 grid w-full max-w-3xl grid-cols-2 gap-2.5 sm:mt-6 sm:max-w-4xl sm:grid-cols-3 lg:grid-cols-5">
+    <div className="mt-5 grid w-full max-w-2xl grid-cols-2 gap-2.5 sm:mt-7 sm:max-w-5xl sm:grid-cols-3 lg:grid-cols-5">
       {TOOL_SHOWCASE.map((t) => {
         const Icon = TOOL_SHOWCASE_ICON[t.icon];
         return (
@@ -74,21 +74,21 @@ function ToolShowcase({ onPick }: { onPick: () => void }) {
             onClick={t.available ? onPick : undefined}
             data-soon={!t.available || undefined}
             aria-label={t.available ? `${t.label} — choose it from the tool menu` : `${t.label} — coming soon`}
-            className="fethron-ai-tool-chip group relative flex items-start gap-2.5 rounded-2xl px-3 py-3 text-left disabled:cursor-not-allowed"
+            className="fethron-ai-tool-chip group relative flex flex-col gap-2.5 rounded-2xl p-3.5 text-left disabled:cursor-not-allowed"
           >
-            <span className="fethron-ai-tool-ico mt-px flex h-7 w-7 shrink-0 items-center justify-center rounded-lg">
-              <Icon className="h-[15px] w-[15px]" strokeWidth={2} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-                <span className="text-[12.5px] font-semibold leading-tight text-[var(--ai-text)]">{t.label}</span>
-                {!t.available && (
-                  <span className="shrink-0 rounded-full bg-[var(--ai-primary)] px-1.5 py-[1px] text-[8px] font-bold uppercase tracking-[0.08em] text-white">
-                    Soon
-                  </span>
-                )}
+            {!t.available && (
+              <span className="absolute right-2.5 top-2.5 rounded-full bg-[var(--ai-primary)] px-1.5 py-[2px] text-[7.5px] font-bold uppercase leading-none tracking-[0.12em] text-white">
+                Soon
               </span>
-              <span className="mt-1 block text-[10.5px] leading-snug text-[var(--ai-text-muted)]">{t.hint}</span>
+            )}
+            <span className="fethron-ai-tool-ico flex h-8 w-8 items-center justify-center rounded-xl">
+              <Icon className="h-[17px] w-[17px]" strokeWidth={1.9} />
+            </span>
+            <span className="flex flex-col gap-1">
+              <span className="text-[12.5px] font-semibold leading-[1.25] tracking-[-0.01em] text-[var(--ai-text)]">
+                {t.label}
+              </span>
+              <span className="text-[10.5px] leading-[1.35] text-[var(--ai-text-muted)]">{t.hint}</span>
             </span>
           </button>
         );
