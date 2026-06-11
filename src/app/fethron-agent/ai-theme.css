@@ -42,6 +42,13 @@
   initial-value: #f7e8bf;
 }
 
+/* Hard guard: the agent shell must never exceed the viewport width (kills any
+   stray horizontal scroll on mobile, whatever the cause). */
+.fethron-ai {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 .fethron-ai {
   --ai-theme-duration: 900ms;
   --ai-theme-ease: cubic-bezier(0.4, 0, 0.2, 1);

@@ -294,7 +294,7 @@ function ToolModePicker({
         className="fethron-ai-model-picker inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[12px] font-semibold disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:text-[13px]"
       >
         <ActiveIcon size={14} className="shrink-0 text-[var(--ai-primary)]" aria-hidden />
-        <span className="max-w-[8.5rem] truncate sm:max-w-none">{active.label}</span>
+        <span className="hidden sm:inline">{active.label}</span>
         <ChevronDownIcon size={14} className={`shrink-0 opacity-70 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -778,44 +778,46 @@ export function AiToolsHub({
         className="fethron-ai-prompt-field w-full resize-none bg-transparent text-[15px] leading-relaxed outline-none sm:text-base"
       />
 
-      <div className="fethron-ai-prompt-toolbar mt-1 flex flex-wrap items-center gap-2 pt-1">
+      <div className="fethron-ai-prompt-toolbar mt-1 flex items-center gap-1.5 pt-1 sm:gap-2">
         <AttachMenu openUp={isChat} onAdd={addFiles} />
 
-        <div className="ml-auto flex flex-wrap items-center justify-end gap-2 sm:gap-2.5">
-          <AnimatePresence>
-            {toolHint && (
-              <motion.span
-                key="tool-hint"
-                initial={{ opacity: 0, x: 8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 8 }}
-                className="hidden items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-[var(--ai-primary)] sm:flex"
-              >
-                Select a tool
-                <motion.span aria-hidden="true" animate={{ x: [0, 5, 0] }} transition={{ duration: 0.9, repeat: Infinity }}>
-                  →
-                </motion.span>
+        <AnimatePresence>
+          {toolHint && (
+            <motion.span
+              key="tool-hint"
+              initial={{ opacity: 0, x: 8 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 8 }}
+              className="hidden items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-[var(--ai-primary)] sm:flex"
+            >
+              Select a tool
+              <motion.span aria-hidden="true" animate={{ x: [0, 5, 0] }} transition={{ duration: 0.9, repeat: Infinity }}>
+                →
               </motion.span>
-            )}
-          </AnimatePresence>
-          {/* Tool dropdown — locked while a run is in flight. The buttons below the
-              composer point the user here instead of forcing a selection. */}
-          <span className={`inline-flex rounded-full ${toolHint ? "fethron-ai-tool-pulse" : ""}`}>
-            <ToolModePicker
-              activeId={toolMode}
-              onSelect={setToolMode}
-              disabled={runActive || isSending}
-              openUp={isChat}
-            />
-          </span>
-          <ModelPicker activeId={modelId} onSelect={setModelId} openUp={isChat} />
+            </motion.span>
+          )}
+        </AnimatePresence>
+
+        {/* Tool dropdown — locked while a run is in flight. */}
+        <span className={`inline-flex rounded-full ${toolHint ? "fethron-ai-tool-pulse" : ""}`}>
+          <ToolModePicker
+            activeId={toolMode}
+            onSelect={setToolMode}
+            disabled={runActive || isSending}
+            openUp={isChat}
+          />
+        </span>
+        <ModelPicker activeId={modelId} onSelect={setModelId} openUp={isChat} />
+
+        {/* Send pinned to the right; everything else stays grouped on the left. */}
+        <span className="ml-auto inline-flex shrink-0">
           <ActionButton
             state={runActive ? "running" : isSending ? "sending" : "idle"}
             hasText={canSend}
             onSend={() => void handleSend()}
             onStop={handleStop}
           />
-        </div>
+        </span>
       </div>
     </div>
   );
