@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
+import { BadgePercent, Globe, Mail, type LucideIcon } from "lucide-react";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 import { SOCIAL, SOCIAL_ICON } from "@/config/social";
@@ -45,17 +46,18 @@ const SOCIAL_LINKS = [
 ];
 
 const STUDIO_LINKS = [
-  { label: "Visit fethron.com", href: "https://fethron.com", emoji: "↗" },
-  { label: "See Pricing — 50% Off", href: "/pricing", emoji: "₹" },
-  { label: "Try the Fethron AI Agent", href: FETHRON_AGENT_URL, emoji: "✦" },
-  { label: "Write to Us", href: "/submit", emoji: "✉" },
+  { label: "Visit fethron.com", href: "https://fethron.com", Icon: Globe },
+  { label: "See Pricing — 50% Off", href: "/pricing", Icon: BadgePercent },
+  { label: "Try the Fethron AI Agent", href: FETHRON_AGENT_URL, brand: true },
+  { label: "Write to Us", href: "/submit", Icon: Mail },
 ];
 
 function Row({
   href,
   label,
   icon,
-  emoji,
+  Icon,
+  brand,
   t,
   reduce,
   i,
@@ -63,36 +65,45 @@ function Row({
   href: string;
   label: string;
   icon?: string;
-  emoji?: string;
+  Icon?: LucideIcon;
+  brand?: boolean;
   t: (typeof THEME)[Mode];
   reduce: boolean | null;
   i: number;
 }) {
   const inner = (
     <>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl">
-        {icon ? (
+      <span
+        className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl transition-transform duration-300 group-hover:scale-105"
+        style={Icon || brand ? { background: `color-mix(in srgb, ${t.accent} 14%, transparent)` } : undefined}
+      >
+        {brand ? (
+          <span className="inline-flex h-[19px] w-[19px] items-center justify-center">
+            <BrandMark variant="red" />
+          </span>
+        ) : Icon ? (
+          <Icon className="h-[18px] w-[18px]" strokeWidth={2} style={{ color: t.accent }} />
+        ) : icon ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={icon} alt="" className="h-full w-full object-contain" />
-        ) : (
-          <span className="text-[17px] font-semibold" style={{ color: t.accent }}>
-            {emoji}
-          </span>
-        )}
+        ) : null}
       </span>
-      <span className="flex-1 text-[15px] font-semibold">{label}</span>
-      <span className="text-lg opacity-40 transition-transform duration-200 group-hover:translate-x-1">→</span>
+      <span className="flex-1 text-[15px] font-semibold tracking-[-0.005em]">{label}</span>
     </>
   );
-  // transition-colors ONLY — Framer owns transform/opacity, CSS owns the theme
-  // colour fade. Mixing transition-all + Framer caused the mode-switch glitch.
+  // Framer owns transform/opacity (lift + tap); CSS owns the colour + shadow fade
+  // via theme vars — keeping them on separate channels avoids the mode-switch glitch.
   const className =
-    "group flex w-full items-center gap-3.5 rounded-2xl border px-4 py-3.5 backdrop-blur-sm transition-colors duration-300";
+    "welcome-btn group relative flex w-full items-center gap-3.5 overflow-hidden rounded-2xl border px-4 py-3.5 backdrop-blur-sm border-[var(--row-border)] bg-[var(--row-bg)] shadow-[0_2px_10px_-6px_rgba(0,0,0,0.4)] transition-[background-color,border-color,box-shadow] duration-300 hover:border-[var(--row-border-hover)] hover:bg-[var(--row-bg-hover)] hover:shadow-[0_14px_36px_-14px_var(--row-glow)] [&>span]:relative [&>span]:z-[1]";
   const style = {
-    background: t.card,
-    borderColor: t.border,
     color: t.text,
-  } as const;
+    ["--row-accent" as string]: t.accent,
+    ["--row-bg" as string]: t.card,
+    ["--row-bg-hover" as string]: t.cardHover,
+    ["--row-border" as string]: t.border,
+    ["--row-border-hover" as string]: `color-mix(in srgb, ${t.accent} 42%, ${t.border})`,
+    ["--row-glow" as string]: `color-mix(in srgb, ${t.accent} 30%, transparent)`,
+  } as React.CSSProperties;
 
   const motionProps = reduce
     ? {}

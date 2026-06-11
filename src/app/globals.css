@@ -579,6 +579,37 @@ button:disabled,
   animation: badge-pulse 2.2s ease-in-out infinite;
 }
 
+/* Welcome-hub buttons — a soft accent gradient sheen (top-left) plus a minimal
+   grain texture confined to the bottom-right corner (not full coverage). Driven by
+   `--row-accent` so it reads in both the studio (dark) and light themes; pure
+   CSS pseudo-elements, so it never fights the Framer lift or the theme cross-fade. */
+.welcome-btn::before,
+.welcome-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.welcome-btn::before {
+  background:
+    radial-gradient(85% 130% at 0% 0%, color-mix(in srgb, var(--row-accent) 13%, transparent), transparent 52%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.05), transparent 42%);
+}
+.welcome-btn::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='wn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23wn)'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  -webkit-mask-image: radial-gradient(120% 150% at 100% 100%, #000 0%, transparent 56%);
+  mask-image: radial-gradient(120% 150% at 100% 100%, #000 0%, transparent 56%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-btn::after {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -36,6 +36,9 @@ yarn-error.log*
 # backend lives in its own repo — never ship it with the frontend
 /backend
 
+# local brand/card working assets (not part of the site)
+/design
+
 # vercel
 .vercel
 
