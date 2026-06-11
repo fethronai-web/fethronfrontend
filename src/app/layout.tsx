@@ -9,6 +9,7 @@ import { logger } from "@/lib/logger";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { VideoPreloader } from "@/components/fethron-ai/video-preloader";
 import { BrandJsonLd } from "@/components/seo/structured-data";
+import { Analytics } from "@/components/analytics";
 import "./globals.css";
 
 const sans = Manrope({
@@ -113,6 +114,7 @@ export default async function RootLayout({
         <BrandJsonLd />
         <SiteChrome isAgentHost={isAgentHost}>{children}</SiteChrome>
         <VideoPreloader isAgentHost={isAgentHost} />
+        <Analytics />
       </body>
     </html>
   );
