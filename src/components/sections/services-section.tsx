@@ -65,6 +65,14 @@ const SERVICES: Service[] = [
   },
   {
     no: "04",
+    title: "Mobile Development",
+    image: "/images/webdev.webp",
+    tags: ["iOS", "Android", "React Native", "Flutter", "App Store"],
+    description:
+      "We design and ship native-quality mobile apps for iOS and Android — fast, fluid, and built to feel right in the hand. From onboarding and offline support to push notifications, payments, and store submission, we own the full journey, delivering polished apps backed by clean architecture and rigorous testing that your users love and your team can confidently grow for years.",
+  },
+  {
+    no: "05",
     title: "Web 3.0",
     image: "/images/web3.webp",
     tags: ["Smart Contracts", "dApps", "Solidity", "NFTs", "Wallets"],
@@ -72,7 +80,7 @@ const SERVICES: Service[] = [
       "We bring brands on-chain with secure, audited Web 3.0 experiences — decentralised apps, smart contracts, token systems, and NFT platforms. From wallet integration and gas optimisation to contract security and intuitive front-ends, we make blockchain feel effortless for everyday users while giving you ownership, transparency, and powerful new ways to engage and reward your community.",
   },
   {
-    no: "05",
+    no: "06",
     title: "Brand & Identity",
     image: "/images/brand.webp",
     tags: ["Strategy", "Logo", "Design Systems", "Guidelines", "Art Direction"],
@@ -80,7 +88,7 @@ const SERVICES: Service[] = [
       "We shape brands that feel inevitable — sharp positioning, distinctive visual identity, and design systems that stay consistent at every touchpoint. From logo and typography to colour, motion, and tone of voice, we craft a cohesive language that earns trust, signals quality, and makes ambitious companies impossible to ignore across every screen and surface they appear on.",
   },
   {
-    no: "06",
+    no: "07",
     title: "Digital Marketing",
     image: "/images/marketing.webp",
     tags: ["GEO", "SEO", "Analytics", "Growth", "Content", "Paid Ads"],
