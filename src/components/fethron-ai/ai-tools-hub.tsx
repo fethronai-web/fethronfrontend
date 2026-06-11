@@ -139,7 +139,7 @@ function ModelPicker({
         aria-expanded={open}
         aria-haspopup="listbox"
         onClick={() => setOpen((v) => !v)}
-        className="fethron-ai-model-picker inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold sm:text-[13px]"
+        className="fethron-ai-model-picker inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[12px] font-semibold sm:px-3 sm:text-[13px]"
       >
         <span>{active.name}</span>
         <ChevronDownIcon size={14} className={`shrink-0 opacity-70 transition-transform ${open ? "rotate-180" : ""}`} />
@@ -291,10 +291,10 @@ function ToolModePicker({
         aria-haspopup="listbox"
         disabled={disabled}
         onClick={() => setOpen((v) => !v)}
-        className="fethron-ai-model-picker inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold disabled:cursor-not-allowed disabled:opacity-50 sm:text-[13px]"
+        className="fethron-ai-model-picker inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[12px] font-semibold disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:text-[13px]"
       >
         <ActiveIcon size={14} className="shrink-0 text-[var(--ai-primary)]" aria-hidden />
-        <span>{active.label}</span>
+        <span className="max-w-[8.5rem] truncate sm:max-w-none">{active.label}</span>
         <ChevronDownIcon size={14} className={`shrink-0 opacity-70 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -778,10 +778,10 @@ export function AiToolsHub({
         className="fethron-ai-prompt-field w-full resize-none bg-transparent text-[15px] leading-relaxed outline-none sm:text-base"
       />
 
-      <div className="fethron-ai-prompt-toolbar mt-1 flex items-center gap-2 pt-1">
+      <div className="fethron-ai-prompt-toolbar mt-1 flex flex-wrap items-center gap-2 pt-1">
         <AttachMenu openUp={isChat} onAdd={addFiles} />
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-2.5">
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-2 sm:gap-2.5">
           <AnimatePresence>
             {toolHint && (
               <motion.span
@@ -789,7 +789,7 @@ export function AiToolsHub({
                 initial={{ opacity: 0, x: 8 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 8 }}
-                className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-[var(--ai-primary)]"
+                className="hidden items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-[var(--ai-primary)] sm:flex"
               >
                 Select a tool
                 <motion.span aria-hidden="true" animate={{ x: [0, 5, 0] }} transition={{ duration: 0.9, repeat: Infinity }}>
@@ -847,7 +847,7 @@ export function AiToolsHub({
             <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden">
               {isChat ? (
                 <>
-                  <div className="relative min-h-0 flex-1 overflow-y-auto px-4 pt-4 sm:px-6">
+                  <div className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 sm:px-6">
                     {/* Thin, unobtrusive top progress while a chat loads in place. */}
                     {isLoadingChat && (
                       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-0.5 overflow-hidden">
@@ -861,14 +861,14 @@ export function AiToolsHub({
                   </div>
                 </>
               ) : (
-                <div className="flex flex-1 flex-col items-center overflow-y-auto px-4 pb-10 pt-6 sm:px-6 sm:pb-14 sm:pt-8">
+                <div className="flex flex-1 flex-col items-center overflow-y-auto overflow-x-hidden px-4 pb-10 pt-6 sm:px-6 sm:pb-14 sm:pt-8">
                   <div className="my-auto flex w-full flex-col items-center">
                     <div className="fethron-ai-greeting mb-8 text-center sm:mb-10">
                       <div className="flex items-center justify-center gap-2.5 sm:gap-4">
                         <span className="h-8 w-8 shrink-0 sm:h-11 sm:w-11" aria-hidden="true">
                           <BrandMark variant="red" />
                         </span>
-                        <p className="font-display whitespace-nowrap text-[clamp(1.5rem,7vw,3.5rem)] font-medium leading-[1.08]">
+                        <p className="font-display whitespace-nowrap text-[clamp(1.3rem,5.6vw,3.5rem)] font-medium leading-[1.08]">
                           {greeting}, builder
                         </p>
                       </div>
