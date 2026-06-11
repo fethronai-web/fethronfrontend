@@ -106,7 +106,9 @@
 .fethron-ai-prompt-field,
 .fethron-ai-model-menu,
 .fethron-ai-attach-menu,
-.fethron-ai-user-menu {
+.fethron-ai-user-menu,
+.fethron-ai-tool-chip,
+.fethron-ai-tool-ico {
   transition:
     background var(--ai-theme-duration) var(--ai-theme-ease),
     background-color var(--ai-theme-duration) var(--ai-theme-ease),
@@ -133,7 +135,9 @@
   .fethron-ai-prompt-field,
   .fethron-ai-model-menu,
   .fethron-ai-attach-menu,
-  .fethron-ai-user-menu {
+  .fethron-ai-user-menu,
+  .fethron-ai-tool-chip,
+  .fethron-ai-tool-ico {
     transition: none !important;
   }
 }
@@ -953,6 +957,31 @@ html[data-fethron-ai-theme="dark"] .dynamic-shadow-dom {
 }
 .fethron-ai-tool-pulse {
   animation: fethron-tool-pulse 0.9s ease-in-out infinite;
+}
+
+/* Tool library buttons under the composer. Colours come from theme vars (and the
+   element is in the theme-transition list above) so they cross-fade in sync with a
+   theme switch — no flicker. */
+.fethron-ai-tool-chip {
+  border: 1px solid var(--ai-border);
+  background: var(--ai-glass);
+}
+.fethron-ai-tool-chip:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--ai-primary) 55%, var(--ai-border));
+  box-shadow: 0 8px 22px -12px color-mix(in srgb, var(--ai-primary) 45%, transparent);
+}
+.fethron-ai-tool-chip[data-soon] {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--ai-border) 85%, transparent);
+  background: color-mix(in srgb, var(--ai-glass) 60%, transparent);
+}
+.fethron-ai-tool-ico {
+  color: var(--ai-primary);
+  background: color-mix(in srgb, var(--ai-primary) 13%, transparent);
+}
+.fethron-ai-tool-chip[data-soon] .fethron-ai-tool-ico {
+  color: var(--ai-text-muted);
+  background: color-mix(in srgb, var(--ai-text-muted) 12%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .fethron-ai-tool-pulse {
