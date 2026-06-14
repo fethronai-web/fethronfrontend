@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { Container } from "@/components/ui/container";
+import { Reveal } from "@/components/ui/reveal";
 import { FaqJsonLd, type FaqItem } from "@/components/seo/structured-data";
+
+export type { FaqItem };
 
 export const HOME_FAQS: FaqItem[] = [
   {
@@ -25,8 +30,8 @@ export const HOME_FAQS: FaqItem[] = [
     a: "Yes. Fethron works with founders and businesses globally. All communication and deliverables are in English.",
   },
   {
-    q: "How do I start a project with Fethron?",
-    a: "Visit fethron.com/submit and send a letter about what you want to build. The team will respond with a scoped proposal. You can also try Fethron AI at aistudio.fethron.com to generate a free Vision-to-Launch blueprint first.",
+    q: "How do I start a project?",
+    a: "Visit fethron.com/submit and send a letter about what you want to build. The team responds with a scoped proposal. You can also run Fethron AI first to get a free Vision-to-Launch blueprint.",
   },
   {
     q: "What payment terms does Fethron use?",
@@ -34,49 +39,86 @@ export const HOME_FAQS: FaqItem[] = [
   },
 ];
 
-function FaqItem({ item, index }: { item: FaqItem; index: number }) {
+function FaqRow({ item, index, isLast }: { item: FaqItem; index: number; isLast: boolean }) {
   const [open, setOpen] = useState(false);
+  const reduced = useReducedMotion();
+
   return (
-    <div className="border-b border-white/10">
+    <div className={isLast ? "" : "border-b border-white/8"}>
       <button
-        className="flex w-full items-start justify-between gap-4 py-5 text-left"
+        className="group flex w-full items-start gap-6 py-7 text-left sm:gap-10 sm:py-8"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
       >
-        <span className="font-sans text-sm font-medium text-white/80 sm:text-base">
-          <span className="mr-3 font-mono text-xs text-red-500/60">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+        {/* index */}
+        <span className="mt-0.5 shrink-0 font-mono text-[11px] font-medium tracking-widest text-red-600/70 sm:text-xs">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        {/* question */}
+        <span className="flex-1 font-sans text-base font-medium leading-snug text-off-white/80 transition-colors duration-200 group-hover:text-off-white sm:text-lg">
           {item.q}
         </span>
-        <span className="mt-0.5 shrink-0 text-white/30 transition-transform duration-200"
-          style={{ transform: open ? "rotate(45deg)" : "none" }}>
+
+        {/* toggle */}
+        <span
+          className="mt-0.5 shrink-0 text-xl font-light text-off-white/30 transition-all duration-300 group-hover:text-off-white/60"
+          style={{ transform: open ? "rotate(45deg)" : "rotate(0deg)" }}
+          aria-hidden="true"
+        >
           +
         </span>
       </button>
-      {open && (
-        <p className="pb-5 pl-8 text-sm leading-relaxed text-white/50">
-          {item.a}
-        </p>
-      )}
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="answer"
+            initial={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            animate={reduced ? { opacity: 1 } : { height: "auto", opacity: 1 }}
+            exit={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="pb-8 pl-11 pr-8 font-sans text-sm leading-relaxed text-off-white/45 sm:pl-16 sm:text-base sm:leading-7">
+              {item.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export function FaqSection({ faqs = HOME_FAQS }: { faqs?: FaqItem[] }) {
   return (
-    <section className="bg-black px-6 py-20 sm:px-8 lg:px-16">
+    <section className="bg-black py-24 sm:py-32 lg:py-40">
       <FaqJsonLd items={faqs} />
-      <div className="mx-auto max-w-3xl">
-        <h2 className="mb-12 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/30">
-          Questions
-        </h2>
-        <div>
+      <Container>
+        <div className="mb-16 flex items-end justify-between gap-6 border-b border-white/8 pb-10 sm:mb-20">
+          <Reveal>
+            <div>
+              <p className="mb-4 font-sans text-[10px] font-semibold uppercase tracking-[0.28em] text-white/25">
+                Common questions
+              </p>
+              <h2 className="font-display text-[clamp(3rem,6vw,5.5rem)] font-normal leading-[0.9] tracking-[-0.02em] text-off-white">
+                Q&nbsp;&amp;&nbsp;A
+              </h2>
+            </div>
+          </Reveal>
+          <Reveal delay={1}>
+            <p className="hidden max-w-xs text-right font-sans text-sm leading-relaxed text-off-white/35 sm:block">
+              Everything you need to know before we start building together.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="border-t border-white/8">
           {faqs.map((item, i) => (
-            <FaqItem key={i} item={item} index={i} />
+            <FaqRow key={i} item={item} index={i} isLast={i === faqs.length - 1} />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
