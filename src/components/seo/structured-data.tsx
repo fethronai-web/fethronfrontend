@@ -77,6 +77,26 @@ export function BrandJsonLd() {
   );
 }
 
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+/** FAQPage — renders JSON-LD for any page that has a visible FAQ section.
+ *  Critical for Google AI Mode, Perplexity, and ChatGPT Search citations. */
+export function FaqJsonLd({ items }: { items: FaqItem[] }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+  return <JsonLd data={data} />;
+}
+
 /** SoftwareApplication — the free AI agent product (its own subdomain). */
 export function AgentJsonLd() {
   const app = {
