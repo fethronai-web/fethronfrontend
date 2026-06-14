@@ -47,7 +47,9 @@ export function BrandJsonLd() {
     image: `${ORIGIN}/brand/fethron-logo-wordmark-dark.png`,
     description:
       "Fethron is a digital product studio that designs and builds web apps, mobile apps, AI agents, e-commerce, Web3 dApps, branding and growth — from idea to launch.",
+    foundingDate: "2024",
     email: SOCIAL.email,
+    telephone: SOCIAL.phone.replace(/\s+/g, ""),
     sameAs: SAME_AS,
     contactPoint: {
       "@type": "ContactPoint",

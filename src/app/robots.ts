@@ -7,11 +7,21 @@ import type { MetadataRoute } from "next";
  */
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/api/", "/c/", "/fethron-agent/c/"],
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/c/", "/fethron-agent/c/"],
+      },
+      // Explicitly allow AI search indexers so Fethron can be cited in
+      // ChatGPT Search, Perplexity, Google AI Mode, and Claude answers.
+      // Note: GPTBot = OpenAI training; OAI-SearchBot = ChatGPT Search citations.
+      { userAgent: "OAI-SearchBot", allow: "/" },
+      { userAgent: "PerplexityBot", allow: "/" },
+      { userAgent: "ClaudeBot", allow: "/" },
+      { userAgent: "GPTBot", allow: "/" },
+      { userAgent: "Applebot", allow: "/" },
+    ],
     sitemap: "https://fethron.com/sitemap.xml",
     host: "https://fethron.com",
   };
