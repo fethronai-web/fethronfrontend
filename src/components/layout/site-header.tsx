@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { PAGE_INSET_X, PAGE_INSET_TOP } from "@/config/layout";
 import { FETHRON_AGENT_URL } from "@/config/ai-tools";
 import { NAV_LINKS, SITE } from "@/config/site";
@@ -20,12 +20,59 @@ export function SiteHeader() {
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const reduce = useReducedMotion();
   const pathname = usePathname();
+  const router = useRouter();
   const isHome = pathname === "/";
 
   // Section anchors only exist on the landing page; from any other route send
   // them home first (e.g. "#work" → "/#work").
   const resolveHref = (href: string) =>
     href.startsWith("#") && !isHome ? `/${href}` : href;
+
+  // Section links scroll deterministically — never via the URL hash (a stale "#process"
+  // must never hijack the logo). The header lives in the root layout, so it survives the
+  // route change: after pushing "/" (scroll:false stops Next's jump-to-top) we poll from
+  // here until the home page + section exist, then position on it and re-aim as it settles.
+  const sectionOffset = () => {
+    const headerEl = document.querySelector("header");
+    return (headerEl instanceof HTMLElement ? headerEl.offsetHeight : 72) + 16;
+  };
+
+  const handleAnchorClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return; // /pricing etc. — let the Link navigate
+    const id = href.slice(1);
+    event.preventDefault();
+    setMenuOpen(false);
+
+    if (isHome) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - sectionOffset();
+      window.scrollTo({ top, behavior: "smooth" });
+      return;
+    }
+
+    const html = document.documentElement;
+    const prevBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto"; // instant corrective scrolls
+    router.push("/", { scroll: false });
+
+    let waited = 0;
+    let corrections = 0;
+    const tick = () => {
+      const el =
+        window.location.pathname === "/" ? document.getElementById(id) : null;
+      if (!el) {
+        if (waited++ < 60) window.setTimeout(tick, 80);
+        else html.style.scrollBehavior = prevBehavior;
+        return;
+      }
+      const top = el.getBoundingClientRect().top + window.scrollY - sectionOffset();
+      window.scrollTo({ top, behavior: "auto" });
+      if (corrections++ < 6) window.setTimeout(tick, 130);
+      else html.style.scrollBehavior = prevBehavior;
+    };
+    window.setTimeout(tick, 60);
+  };
 
   // Re-run on every route change. The header persists across navigations, so a
   // one-time observer would keep watching a detached #hero after you return to
@@ -164,6 +211,7 @@ export function SiteHeader() {
               <Link
                 key={link.href}
                 href={resolveHref(link.href)}
+                onClick={(e) => handleAnchorClick(e, link.href)}
                 className={cn(
                   "relative text-[11px] font-medium uppercase tracking-[0.16em] transition-colors",
                   onHero
@@ -262,7 +310,10 @@ export function SiteHeader() {
                     <Link
                       ref={index === 0 ? firstLinkRef : undefined}
                       href={resolveHref(link.href)}
-                      onClick={closeMenu}
+                      onClick={(e) => {
+                        handleAnchorClick(e, link.href);
+                        closeMenu();
+                      }}
                       className={cn(
                         "flex items-center rounded-lg px-3 py-2.5 text-sm font-medium uppercase tracking-wider",
                         onHero

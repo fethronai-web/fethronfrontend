@@ -7,6 +7,7 @@ import { ServicesSection } from "@/components/sections/services-section";
 import { WorkSection } from "@/components/sections/work-section";
 import { ProcessSection } from "@/components/sections/process-section";
 import { FaqSection } from "@/components/sections/faq-section";
+import { HashScroll } from "@/components/util/hash-scroll";
 import { logger } from "@/lib/logger";
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function HomePage() {
 
   return (
     <main id="main-content" className="flex-1 bg-black">
+      <HashScroll />
       <HeroSection />
       <MarqueeStrip />
       <CompanySection />
